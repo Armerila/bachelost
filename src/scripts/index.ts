@@ -1,3 +1,3 @@
-import game from './game.narrat';
+import game from "./game.narrat";
 
 export default [game];

@@ -16,6 +16,7 @@
   "license": "",
   "scripts": {
     "start": "npm run dev",
+    "pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\"",
     "dev": "vite",
     "build": "cross-env VITE_BUILD=true vite build",
     "build-debug": "cross-env VITE_BUILD=true VITE_DEBUG=true vite build",
