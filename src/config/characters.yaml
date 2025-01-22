@@ -3,7 +3,7 @@ config:
   imagesPath: img/characters/
 characters:
   game:
-    name: ''
+    name: "????"
     color: white
   player:
     style:

@@ -1,4 +1,24 @@
 main:
-  "Hello world"
-  set_screen game 0 slide-top 1000
-  "(This game is empty so nothing will happen past this point. Open game.narrat to start editing)"
+  narrate "Loputon pyörre."
+  narrate "Kurimus, jossa suunta ja lokaatio käyvät luovaa ja intohimoista tanssia, tietoisen mielen seuratessa kolmantena pyöränä lavan reunalla. Vuoron odottaminen on turhaa, sillä musiikin päättyessä istut jo ainoalla vapaalla tuolilla."
+  narrate "Ainoa mitä voit toivoa on, että spatian lopullinen asetelma  suo armoa rieputellulle korporalisoituneelle havaitsijalle."
+  jump first_choice
+
+first_choice: 
+  choice:
+    narrate ""
+    "Pysähdy. Ota tästä kiinni."
+      talk game idle "Pysähtyminen on merkityksetöntä, liike tapahtuu relaatiossa, vailla kiinnekohtaa pysähtyminen ja jatkaminen ovat sama sana. Kiinnittymisen palkka on petos."
+      jump first_choice
+    "Vali vali :-D tunnet jo korporaalisuuden kahleet. Somet, varpaat, sisäkorvan jatkuva valitus. Vääryydet voi korjata hyväksynnällä."
+      jump first_choice
+    "Tunnelatautunut arvottunut retoriikka ehdottaa jo kiinnittymistä. Teeskentelylle ja tekopyhyydelle on aikansa. Nyt on aika kysyä kysymyksiä."
+      talk game idle "Kysymykset antavat nimiä, nimet antavat synnyn asioille, asiat manifestoivat."
+  narrate "Nimet asioiksi, asiat manifestoituvat. Äänten äänetön kakofonia sijaitsee päässä, päässä on kiinni silmät jotka välttelevät kansiensa läpi kajastavaa valoa, valo tulee aina ulkoa, ulkoa tulee vaatimuksia, vaatimuksia keholle jonka vankina olet. Hankaavat kankaat raajoja vasten, raajat jotka kiinni kehossa, keho kiinni päässä. Päässä jossa kiinni korvat, korvat jossa ulkopuolen alati yltyvä pyörintä päätetään. Korvat joissa tuodaan ulkoa sisälle inhottava merkitys. Sanaton suu täynnä tahnaa, joka vaatii. Liian vähän jotain. Liian paljon jotain muuta, mutta samaa. Vaatii."
+  narrate "Vaatii."
+  narrate "Vaatii."
+  narrate "VAATII."
+  narrate "VAATII."
+  set_screen chapter1 0 slide-top 1000
+  talk player idle "VETTÄ"
+

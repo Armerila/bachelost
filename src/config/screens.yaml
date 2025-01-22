@@ -1,5 +1,5 @@
 screens:
   default:
     background: img/backgrounds/curtain.webp
-  game:
-    background: img/backgrounds/map.webp
+  chapter1:
+    background: img/backgrounds/valtteri_heraa.jpg
