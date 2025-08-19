@@ -216,7 +216,7 @@ $(document).on("keyup", function (e) {
 <<set $motorics to ["composure", "hand/eye coordination", "interfacing", "reaction speed", "savoir faire", "perception", "perception (smell)", "perception (sight)", "perception (taste)", "perception (touch)", "perception (hearing)"]>>
 <<set $intellect to ["conceptualization", "drama", "encyclopedia", "logic", "rhetoric", "visual calculus"]>>
 <<set $fysique to ["electrochemistry", "endurance", "half light", "pain threshold", "physical instrument", "shivers"]>>
-<<set $psyche to ["authority", "empathy", "esprit de corps", "inland empire", "suggestion", "volition"]>>
+<<set $psyche to ["authority", "empathy", "esprit de corps", "inland empire", "suggestion", "volition", "töissäkäyvä ihminen"]>>
 <<set $greentext to []>>
 <<set $paraAppendMode to false>>
 
@@ -364,43 +364,43 @@ Original story by The Worst men
 :: GreenTextWidgets [widget] {"position":"400,600","size":"100,100"}
 <<nobr>>
 <<widget "TaskComplete">>
-<<run $greentext.push("@@.green;Task complete: " + $args[0] + "@@")>>
+<<run $greentext.push("@@.green;Tehtävä suoritettu: " + $args[0] + "@@")>>
 <<if $args[1]>>
-<<run $greentext.push("@@.green;Gained experience: +" + $args[1] + "@@")>>
+<<run $greentext.push("@@.green;Sait kokemuspisteitä: +" + $args[1] + "@@")>>
 <</if>>
 <<set $paraAppendMode to true>>
 <</widget>>
 
 <<widget "SecretTaskComplete">>
-<<run $greentext.push("@@.green;Secret task complete: " + $args[0] + "@@")>>
+<<run $greentext.push("@@.green;Salainen tehtävä suoritettu: " + $args[0] + "@@")>>
 <<if $args[1]>>
-<<run $greentext.push("@@.green;+" + $args[1] + " XP: gained experience@@")>>
+<<run $greentext.push("@@.green;+" + $args[1] + " XP: sait kokemuspisteitä@@")>>
 <</if>>
 <<set $paraAppendMode to true>>
 <</widget>>
 
 <<widget "NewTask">>
-<<run $greentext.push("@@.green;New task: " + $args[0] + "@@")>>
+<<run $greentext.push("@@.green;Uusi tehtävä: " + $args[0] + "@@")>>
 <<set $paraAppendMode to true>>
 <</widget>>
 
 <<widget "ItemGained">>
-<<run $greentext.push("@@.green;Item gained: " + $args[0] + "@@")>>
+<<run $greentext.push("@@.green;Sait esineen: " + $args[0] + "@@")>>
 <<set $paraAppendMode to true>>
 <</widget>>
 
 <<widget "ItemLost">>
-<<run $greentext.push("@@.green;Item lost: " + $args[0] + "@@")>>
+<<run $greentext.push("@@.green;Menetit esineen: " + $args[0] + "@@")>>
 <<set $paraAppendMode to true>>
 <</widget>>
 
 <<widget "ThoughtGained">>
-<<run $greentext.push("@@.green;Thought gained: " + $args[0] + "@@")>>
+<<run $greentext.push("@@.green;Sait ajatuksen: " + $args[0] + "@@")>>
 <<set $paraAppendMode to true>>
 <</widget>>
 
 <<widget "LevelUp">>
-<<run $greentext.push("@@.green;Level up!@@")>>
+<<run $greentext.push("@@.green;Kehityit tason ylöspäin!@@")>>
 <<set $paraAppendMode to true>>
 <</widget>>
 
