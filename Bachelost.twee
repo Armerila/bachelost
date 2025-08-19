@@ -213,10 +213,10 @@ $(document).on("keyup", function (e) {
 
 :: StoryInit {"position":"268,25","size":"100,100"}
 <<set $optionmap to new Map()>>
-<<set $motorics to ["composure", "hand/eye coordination", "interfacing", "reaction speed", "savoir faire", "perception", "perception (smell)", "perception (sight)", "perception (taste)", "perception (touch)", "perception (hearing)"]>>
+<<set $motorics to ["composure", "hand/eye coordination", "interfacing", "reaction speed", "savoir faire", "perception", "perception (smell)", "perception (sight)", "perception (taste)", "perception (touch)", "perception (hearing)", "töissäkäyvä ihminen"]>>
 <<set $intellect to ["conceptualization", "drama", "encyclopedia", "logic", "rhetoric", "visual calculus"]>>
 <<set $fysique to ["electrochemistry", "endurance", "half light", "pain threshold", "physical instrument", "shivers"]>>
-<<set $psyche to ["authority", "empathy", "esprit de corps", "inland empire", "suggestion", "volition", "töissäkäyvä ihminen"]>>
+<<set $psyche to ["authority", "empathy", "esprit de corps", "inland empire", "suggestion", "volition"]>>
 <<set $greentext to []>>
 <<set $paraAppendMode to false>>
 
@@ -275,19 +275,19 @@ $(document).on("keyup", function (e) {
 <</if>>
 <<if $motorics.includes(_skillname)>>
 <<set $currentspeaker to ("@@.motorics.speaker;" +
-_skillname +
+_skillname + ' ' +
 "@@")>>
 <<elseif $intellect.includes(_skillname)>>
 <<set $currentspeaker to ("@@.intellect.speaker;" +
-_skillname +
+_skillname + ' ' +
 "@@")>>
 <<elseif $fysique.includes(_skillname)>>
 <<set $currentspeaker to ("@@.fysique.speaker;" +
-_skillname +
+_skillname + ' ' +
 "@@")>>
 <<elseif $psyche.includes(_skillname)>>
 <<set $currentspeaker to ("@@.psyche.speaker;" +
-_skillname +
+_skillname + ' ' +
 "@@")>>
 <</if>>
 <<if _skillresult>>
@@ -430,7 +430,7 @@ Original story by The Worst men
 <<AddParagraph "[[salmiakkikossu]] lienee paras terästys neurologiselle verkostollesi.">>
 
 :: salmiakkikossu {"position":"1025,425","size":"100,100"}
-<<PassiveSkill "Electrochemistry" "Easy" "Success">>
+<<PassiveSkill "Töissäkäyvä ihminen" "Helppo" "Onnistuminen">>
 <<AddParagraph "Ahh, kuinka se rauhoittaa, pieni tujaus myrkkyä. Kulauttaa kaikki aamupäivän hämmennys hetkeksi alas. Rentoutua. Ihan hetki tässä,">>
 <<SetSpeaker "">>
 <<AddParagraph "kunnes">>
