@@ -492,6 +492,12 @@ Original story by The Worst men
 <<AddParagraph "on aika jatkaa matkaa, mutta muistatko, kuinka ojensit [[käyntikorttisi]], millä tietty henki saisi mitä tahansa?">>
 
 :: käyntikorttisi {"position":"900,800","size":"100,100"}
+<<textbox "$käyntikortti" "" "tarkista">>
+<<AddParagraph "Mitä käyntikortissa lukee? vastaus: 1234">>
+
+:: tarkista
+<<if $käyntikortti is "1234">>
 <<ItemGained "Käyntikortti">>
+<</if>>
 
 <<AddParagraph "Jotkut ihmiset ovat tulleet jäädäkseen, mutta kenen sanoihin voit luottaa, Mr. Moilman? Hallitsetko tunteesi samalla tavoin kuin oksennuksesi? Tunnetko pysyvyyden halkeavan? Nimet muuttuvat merkityksiksi, merkitykset sijainneiksi. Missä tulisi seuraavaksi olla? Ketä kuunnella? Palaako täällä joku? Jatka kaupungin ensimmäiseen [[sijaintiin]] tai ole [[hukassa]].">>
