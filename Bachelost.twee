@@ -213,10 +213,10 @@ $(document).on("keyup", function (e) {
 
 :: StoryInit {"position":"268,25","size":"100,100"}
 <<set $optionmap to new Map()>>
-<<set $motorics to ["composure", "hand/eye coordination", "interfacing", "reaction speed", "savoir faire", "perception", "perception (smell)", "perception (sight)", "perception (taste)", "perception (touch)", "perception (hearing)", "töissäkäyvä ihminen"]>>
+<<set $motorics to ["composure", "hand/eye coordination", "interfacing", "reaction speed", "savoir faire", "perception", "perception (smell)", "perception (sight)", "perception (taste)", "perception (touch)", "perception (hearing)"]>>
 <<set $intellect to ["conceptualization", "drama", "encyclopedia", "logic", "rhetoric", "visual calculus"]>>
 <<set $fysique to ["electrochemistry", "endurance", "half light", "pain threshold", "physical instrument", "shivers"]>>
-<<set $psyche to ["authority", "empathy", "esprit de corps", "inland empire", "suggestion", "volition"]>>
+<<set $psyche to ["authority", "empathy", "esprit de corps", "inland empire", "suggestion", "volition", "töissäkäyvä ihminen"]>>
 <<set $greentext to []>>
 <<set $paraAppendMode to false>>
 
@@ -406,7 +406,49 @@ Original story by The Worst men
 
 <</nobr>>
 
-:: Intro [nobr] {"position":"1100,50","size":"100,100"}
+<!-- ****************** PROLOGI ********************** -->
+
+
+<!-- ****************** RAUTATIEASEMA ********************** -->
+
+:: rautatieasema {"position":"1500,800","size":"100,100"}
+<<AddParagraph "Vaunun ovien sulkeutuessa Eveliinan poissaolo realisoituu. Mitä töissäkäyvän ihmisen tulisi edes tehdä vapaapäivänä. Vaihtoehdot ovat rajalliset tässä kaupungissa.">>
+<<AddParagraph "Kävelen asematunneliin ja pysähdyn tuijottamaan tyhjää vitriiniä, joka yllyttää päässä hakkaavan kivun äärimmilleen ja vatsanpohjalla maannut pahaenteinen tunne nousee rintalastan taakse.">>
+<<AddParagraph "Tämä ikkuna tarkoitti minulle joskus jotakin. Mutta en pysty ymmärtämään otsalohkoni mielenosoituksen yli mitään.">>
+<<PassiveSkill "Töissäkäyvä ihminen" "Easy" "Success">>
+<<AddParagraph "Olet selkeästi vielä työmoodissa ja se heikentää kognitiotasi merkittävästi. Suosittelen vaihtamaan virallisesti vapaalle">>
+<<AddOption "[Töissäkäyvä ihminen] Vaihda vapaalle (juo vapaalle siirtymis potion)" "vapaalle">>
+
+:: vapaalle {"position":"1700,800","size":"100,100"}
+<<SetSpeaker "">>
+<<AddParagraph "Vapaalla Oleminen hälventää tehokkaasti päässäni aiemmin lakkaamattoman jomotuksen. Pahaenteinen tunne siirtyy takaisin vatsan pohjalle ja värit alkavat myös virtaamaan tyhjään näyteikkunaan tuoden mukanaan hurraavan yleisön äänet heidän todistaessaan edessä tapahtuvaa taidespektaakkelia.">>
+<<AddParagraph "Ymmärrät muistojen kautta myös erittäin tärkeän seikan.">>
+<<AddParagraph "Minä Tiedän Asioita.">>
+<<AddOption "[Töissäkäyvä ihminen] Mieti Asioita Joita Tiedät siitä mitä Vapaalla tapahtuu" "töissäkäyvä">>
+<<AddOption "[Pahaenteinen tunne] Mieti Asioita Joita Tiedät paikoista joissa kaikki alkaa" "pahaenteinen">>
+
+
+:: töissäkäyvä {"position":"1700,900","size":"100,100"}
+<<AddParagraph "Vapaalla ei tehdä töitä, Vapaalla poistutaan taloista ja mennään toisiin taloihin. Taloihin joissa voi vaihtaa palkkaa hyödykkeisiin ja palveluihin. Hyödykkeitä kuten juomia, palveluita kuten tarjoilua. Näissä taloissa on muita Vapaalla Olijoita. Vapaalla Olijoita jotka myös Tietävät Asioita ja kertovat niistä mielellään muille. Monesti halusi tai ei.">>
+<<AddOption "Tiedän mihin mennä ja mitä etsiä sieltä." "tiedän">>
+<<AddOption "[Pahaenteinen tunne] En tiedä mihin mennä. Voisin vielä miettiä mitä Asioita Tiedän paikoista joissa kaikki alkaa" "pahaenteinen">>
+
+
+:: pahaenteinen {"position":"1700,1000","size":"100,100"}
+<<AddParagraph "Paikat joissa kaikki alkaa ovat paikkoja joissa tapahtuu asioita. Ensimmäisiä asioita. Ensitapaamisia ja ensivaikutelmia. Ensimmäisiä kosketuksia ja ensimmäisiä muistoja yhdessä.">>
+<<AddOption "Tiedän mihin mennä ja mitä etsiä sieltä." "tiedän">>
+<<AddOption "[Töissäkäyvä ihminen] Voisin vielä miettiä Asioita Joita Tiedän Vapaalla Olemisesta" "töissäkäyvä">>
+
+:: tiedän {"position":"1700,1200","size":"100,100"}
+<<AddParagraph "Vapaalla Oleminen antaa minulle selkeän suunnan ja askel tuntuu kevyemmältä. On ihanaa että myös ilman työn vapauttavaa struktuuria voi hetken aikaa tietää mitä onkaan tekemässä. Mutta pahaenteinen tunne ei ole vielä helpottanut. Tuntuu, että on vielä enemmän Asioita Joita Tietää. Kenties Vapaalla Olemis aktiviteettien jatkaminen auttaa siihen.">>
+<<AddOption "[Selkeä suunta] Olen 100 % oikeassa kohteessa" "ratkaisu">>
+<<AddOption "[Pahaenteinen tunne] Olin liian itsevarma. Minun pitää miettiä enemmän Asioita Joita Tiedän" "pahaenteinen">>
+
+:: ratkaisu {"position":"1700,1400","size":"100,100"}
+
+
+<!-- ****************** KAARLE ********************** -->
+:: Kaarle [nobr] {"position":"1100,50","size":"100,100"}
 <<SetSpeaker "">>
 <<AddParagraph "LOPUTON pyörre. Kurimus, jossa suunta ja paikka vaihtavat muotojaan, käyvät luovaa, intohimoista tanssia.">>
 <<AddParagraph "Tietoinen mielesi seuraa sivusta, kenties tiskin reunalta – kuinka ajat, paikat ja ihmiset vuorottelevat. Mutta...">>
@@ -430,7 +472,7 @@ Original story by The Worst men
 <<AddParagraph "[[salmiakkikossu]] lienee paras terästys neurologiselle verkostollesi.">>
 
 :: salmiakkikossu {"position":"1025,425","size":"100,100"}
-<<PassiveSkill "Töissäkäyvä ihminen" "Helppo" "Onnistuminen">>
+<<PassiveSkill "Electrochemistry" "Easy" "Success">>
 <<AddParagraph "Ahh, kuinka se rauhoittaa, pieni tujaus myrkkyä. Kulauttaa kaikki aamupäivän hämmennys hetkeksi alas. Rentoutua. Ihan hetki tässä,">>
 <<SetSpeaker "">>
 <<AddParagraph "kunnes">>
@@ -440,4 +482,3 @@ Original story by The Worst men
 <<ItemGained "Käyntikortti">>
 
 <<AddParagraph "Jotkut ihmiset ovat tulleet jäädäkseen, mutta kenen sanoihin voit luottaa, Mr. Moilman? Hallitsetko tunteesi samalla tavoin kuin oksennuksesi? Tunnetko pysyvyyden halkeavan? Nimet muuttuvat merkityksiksi, merkitykset sijainneiksi. Missä tulisi seuraavaksi olla? Ketä kuunnella? Palaako täällä joku? Jatka kaupungin ensimmäiseen [[sijaintiin]] tai ole [[hukassa]].">>
-
