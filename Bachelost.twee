@@ -411,26 +411,29 @@ Original story by The Worst men
 
 <!-- ****************** RAUTATIEASEMA ********************** -->
 
-:: rautatieasema {"position":"1500,800","size":"100,100"}
+:: Intro [nobr] {"position":"1500,800","size":"100,100"}
+<<BlankSpeaker>>
 <<AddParagraph "Vaunun ovien sulkeutuessa Eveliinan poissaolo realisoituu. Mitä töissäkäyvän ihmisen tulisi edes tehdä vapaapäivänä. Vaihtoehdot ovat rajalliset tässä kaupungissa.">>
-<<AddParagraph "Kävelen asematunneliin ja pysähdyn tuijottamaan tyhjää vitriiniä, joka yllyttää päässä hakkaavan kivun äärimmilleen ja vatsanpohjalla maannut pahaenteinen tunne nousee rintalastan taakse.">>
-<<AddParagraph "Tämä ikkuna tarkoitti minulle joskus jotakin. Mutta en pysty ymmärtämään otsalohkoni mielenosoituksen yli mitään.">>
+<<AddParagraph "Kävelet asematunneliin ja pysähdyt tuijottamaan tyhjää vitriiniä, joka yllyttää päässä hakkaavan kivun äärimmilleen ja vatsanpohjalla maannut pahaenteinen tunne nousee rintalastasi taakse.">>
+<<AddParagraph "Tämä ikkuna tarkoitti sinulle joskus jotakin. Mutta et pysty ymmärtämään otsalohkoi mielenosoituksen yli mitään.">>
 <<PassiveSkill "Töissäkäyvä ihminen" "Easy" "Success">>
 <<AddParagraph "Olet selkeästi vielä työmoodissa ja se heikentää kognitiotasi merkittävästi. Suosittelen vaihtamaan virallisesti vapaalle">>
 <<AddOption "[Töissäkäyvä ihminen] Vaihda vapaalle (juo vapaalle siirtymis potion)" "vapaalle">>
 
 :: vapaalle {"position":"1700,800","size":"100,100"}
-<<SetSpeaker "">>
-<<AddParagraph "Vapaalla Oleminen hälventää tehokkaasti päässäni aiemmin lakkaamattoman jomotuksen. Pahaenteinen tunne siirtyy takaisin vatsan pohjalle ja värit alkavat myös virtaamaan tyhjään näyteikkunaan tuoden mukanaan hurraavan yleisön äänet heidän todistaessaan edessä tapahtuvaa taidespektaakkelia.">>
+<<BlankSpeaker>>
+<<AddParagraph "Vapaalla Oleminen hälventää tehokkaasti päässäsi aiemmin jyllänneen lakkaamattoman jomotuksen. Pahaenteinen tunne siirtyy takaisin vatsasi pohjalle ja värit alkavat myös virtaamaan tyhjään näyteikkunaan tuoden mukanaan hurraavan yleisön äänet heidän todistaessaan edessä tapahtuvaa taidespektaakkelia.">>
 <<AddParagraph "Ymmärrät muistojen kautta myös erittäin tärkeän seikan.">>
+<<SetSpeaker "">>
 <<AddParagraph "Minä Tiedän Asioita.">>
+<<BlankSpeaker>>
 <<AddOption "[Töissäkäyvä ihminen] Mieti Asioita Joita Tiedät siitä mitä Vapaalla tapahtuu" "töissäkäyvä">>
 <<AddOption "[Pahaenteinen tunne] Mieti Asioita Joita Tiedät paikoista joissa kaikki alkaa" "pahaenteinen">>
 
 
 :: töissäkäyvä {"position":"1700,900","size":"100,100"}
 <<AddParagraph "Vapaalla ei tehdä töitä, Vapaalla poistutaan taloista ja mennään toisiin taloihin. Taloihin joissa voi vaihtaa palkkaa hyödykkeisiin ja palveluihin. Hyödykkeitä kuten juomia, palveluita kuten tarjoilua. Näissä taloissa on muita Vapaalla Olijoita. Vapaalla Olijoita jotka myös Tietävät Asioita ja kertovat niistä mielellään muille. Monesti halusi tai ei.">>
-<<AddOption "Tiedän mihin mennä ja mitä etsiä sieltä." "tiedän">>
+<<AddOption "Tiedän mihin mennä ja lähden etsimään sieltä Tietäjää." "tiedän">>
 <<AddOption "[Pahaenteinen tunne] En tiedä mihin mennä. Voisin vielä miettiä mitä Asioita Tiedän paikoista joissa kaikki alkaa" "pahaenteinen">>
 
 
@@ -445,12 +448,22 @@ Original story by The Worst men
 <<AddOption "[Pahaenteinen tunne] Olin liian itsevarma. Minun pitää miettiä enemmän Asioita Joita Tiedän" "pahaenteinen">>
 
 :: ratkaisu {"position":"1700,1400","size":"100,100"}
+<<AddParagraph "Näetkö jo kaarevan sisäänkäynnin, ehkä tietäjä odottaa sinua jo holvin perällä">>
+<<AddOption "[Selkeä suunta] Astun sisään" "Kaarle">>
+<<AddOption "[Epätoivo] En ymmärrä mitä minun täytyy tehdä" "rautalanka">>
 
+:: rautalanka {"position":"1700,1400","size":"100,100"}
+<<AddParagraph "Et ole vielä kunnolla vaihtanut vapaalle. Ei se mitään. On aika liikkua paikkaan, jossa tapasit Eveliinan ensimäistä kertaa. Matkasi on vasta alussa">>
+<<AddOption "[Selkeä suunta] Astun sisään" "Kaarle">>
+<<AddOption "[Epätoivo] En ymmärrä mitä minun täytyy tehdä" "apina">>
+
+:: apina {"position":"1700,1400","size":"100,100"}
+<<AddParagraph "... MENE JUMPRU NIMISEEN PUBIIN, TUNNETAAN MYÖS NIMELTÄ KAARLENHOLVI. OSOITE ON Kauppurienkatu 6, 90100 Oulu">>
+<<AddOption "[Selkeä suunta] Astun sisään" "Kaarle">>
 
 <!-- ****************** KAARLE ********************** -->
-:: Kaarle [nobr] {"position":"1100,50","size":"100,100"}
-<<SetSpeaker "">>
-<<AddParagraph "LOPUTON pyörre. Kurimus, jossa suunta ja paikka vaihtavat muotojaan, käyvät luovaa, intohimoista tanssia.">>
+:: Kaarle {"position":"1100,50","size":"100,100"}
+<<BlankSpeaker>>
 <<AddParagraph "Tietoinen mielesi seuraa sivusta, kenties tiskin reunalta – kuinka ajat, paikat ja ihmiset vuorottelevat. Mutta...">>
 <<AddParagraph "vuoron odottaminen on turhaa. Aikaa kuluu ehkä savukkeen verran ja näet ainoan oikean paikan [[istuutua]].">>
 
