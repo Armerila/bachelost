@@ -839,7 +839,6 @@ Salasanaboksi osyk -->
 <<AddParagraph "[[Tiedän mihin mennä->kiikelisolution]] tai voin vielä [[keskittyä muistoon->Keskity muistoon]]">>
 
 :: kiikelisolution {"position":"1100,650","size":"100,100"}
-<<PassiveSkill "Selkeä suunta" "Easy" "Success">>
 <<AddParagraph "Molemmat pintaan tulevat ajatukset viittaavat selkeästi samaan paikkaan. En ymmärrä miten se paikka voi mitenkään liittyä häihini tai mihinkään mitä on tapahtunut.">>
 <<AddParagraph "Minun on parempi alkaa saamaan vastauksia.">>
 <<BlankSpeaker>>
