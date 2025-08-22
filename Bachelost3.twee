@@ -648,7 +648,7 @@ Original story by The Worst men
 <<AddOption "[Vapaalla Oleminen] Uskaltaudu katsomaan häntä silmiin, että voit ottaa kontaktia ja ymmärtää häntä paremmin." "vapaacheck">>[[|vapaacheck]]
 
 :: avaimen jatkoon
-<<SetSpeaker >>
+<<SetSpeaker "">>
 <<AddParagraph "Etsivän keissien ratkaisuissa ei tuntunut olevan mitään järkeä. Ne tuntuivat näyttävän minun olevan sekaantuneen (mitä ikinä juttuja ne artun keissit olivatkaan). Ja mitä ihmeen tekemistä minulla olisi Lex Luthorin kanssa?">>
 
 <<PassiveSkill "Pahaenteinen tunne" "Easy" "Success">>
