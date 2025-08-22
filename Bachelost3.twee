@@ -513,7 +513,7 @@ Original story by The Worst men
 :: kuunnella horinaa {"position":"1275,250","size":"100,100"}
 <<AddParagraph "Tietäjä puhuu niin kuin hän puhuu. Ensimmäisiä kertoja kunnollisessa palkkatyössä, ensikertaa pisteessä, jossa ei ole suuria velvollisuuksia. Vihdoin kykenee ostamaan ja tekemään asioita. Kykenee olla huolehtimatta toimeentulosta.">>
 <<AddParagraph "Mutta kuitenkin – sydämen vihlaisu yksiön yksinäisyydessä on totisinta totta. Sydäntä ei voi ostaa, eikä likvidoida. Puute on kohteesta, jolle voisi tarjota tämän kaiken, minkä on valmis antamaan.">>
-<<PassiveSkill "Töissä käyvä ihminen" "Medium" "Success">>
+<<PassiveSkill "Töissäkäyvä ihminen" "Medium" "Success">>
 <<AddParagraph "Minäkin olen palkkatöissä ja minulla on likvidaa.">>
 <<BlankSpeaker>>
 <<AddParagraph "[[Ymmärrän vihjeen]] mitä Tietäjä haluaa, tai jatkan kuuntelua koska [[en vieläkään ymmärrä]].">>
@@ -633,6 +633,7 @@ Original story by The Worst men
 
 :: helmisolution
 
+<<BlankSpeaker>>
 <<AddParagraph "Tiesit juuri mistä keskustella miehen kanssa ja osasit tunnistaa hänen työntekotyylinsä.">> 
 <<AddParagraph "Miehen olemus rentoutuu, tunnen hänen katseensa lukon hellittävän ja pystyn vihdoin näkemään hänet kokonaisena. Miehellä on yllään reissussa rähjääntynyt trenssitakki ja tuhkakupista päätellen hän on ketjupolttanut pöydässä jo tunteja.">>
 
@@ -795,6 +796,7 @@ Salasanaboksi osyk -->
 <<AddParagraph "Tunne ei ole erikoinen. Se on puhdasta valkohehkuista kipua. En ole tuntenut sitä niin pitkään. Viimeksi kun hän lähti. Kuka?">>
 <<PassiveSkill "Pahaenteinen tunne" "Luetko ees näitä" "Success">>
 <<AddParagraph "Kuva hänen kasvoistaan välähtää mielessäni, mutta se tuntuu kaukaiselta ja nopeaan hälvenevältä. Kun koitan pitää sitä mielessäni kipu päässäni yltyy ja huomaan pitkästä aikaa tutun tunteen vatsanpohjassani, joka lähtee kiipeämään ruokatorveani pitkin.">>
+<<SetSpeaker "Sinä"
 <<AddParagraph "En saa unohtaa näitä kasvoja.">>
 <<AddParagraph "Katson nopeaan ympärilleni. En näe ystäviäni missään. Keinosaarella tuntuu olevan lisäkseni ainoastaa yksi henkilö.">>
 <<PassiveSkill "Nostalgia" "Easy" "Success">>
