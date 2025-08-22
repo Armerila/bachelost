@@ -528,7 +528,6 @@ Original story by The Worst men
 <<AddParagraph "[[jatka kuuntelemaan->viimeinen yritys]]">>
 
 :: Ymmärrän vihjeen {"position":"1175,450","size":"100,100"}
-<<AddParagraph "Käyntikortti piilotettu Valtterin lompakkoon.">>
 <<AddParagraph "Mitä käyntikortissa lukee?">>
 <<textbox "$käyntikortti" "" "tarkista_lompakko">>
 
