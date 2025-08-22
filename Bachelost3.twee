@@ -649,7 +649,7 @@ Original story by The Worst men
 
 :: avaimen jatkoon
 <<SetSpeaker "">>
-<<AddParagraph "Etsivän keissien ratkaisuissa ei tuntunut olevan mitään järkeä. Ne tuntuivat näyttävän minun olevan sekaantuneen (mitä ikinä juttuja ne artun keissit olivatkaan). Ja mitä ihmeen tekemistä minulla olisi Lex Luthorin kanssa?">>
+<<AddParagraph "Etsivän keissien ratkaisuissa ei tuntunut olevan mitään järkeä. Ne tuntuivat näyttävän minun olevan sekaantuneen johonkin kadonneeseen runovihkoon. Ja mitä ihmeen tekemistä minulla olisi Lex Luthorin kanssa?">>
 
 <<PassiveSkill "Pahaenteinen tunne" "Easy" "Success">>
 <<AddParagraph "Tiedät jo oikean vastauksen sinun pitää vain etsiä sitä syvempää sisältä">>
@@ -723,7 +723,7 @@ Salasanaboksi osyk -->
 
 <<AddParagraph "Vietetään kultaisia hetkiä yhdessä ystävät">>
 
-<<AddParagraph "Kun olet hengannut ystäviesi kanssa tarpeeksi jatka [[postosyk]]">>
+<<AddParagraph "Kun olet hengannut ystäviesi kanssa tarpeeksi jatkan matkaa">>
 
 <<SetSpeaker "Sinä">>
 <<AddParagraph "Ajanviettomme aikana ystäväni näyttivät hetki hetkeltä tunnistettavimmalta ja yhteinen aika tuntui voimistavan minua entisestään.">>  
@@ -767,7 +767,7 @@ Salasanaboksi osyk -->
 
 :: osyksolution
 <<AddParagraph "Tiedän täydellisen paikan joka tyydyttää kaikkien halut ihastuttavalle kesäpäivälle ja tuntuu että on oikea aika mennä sinne.">>
-<<AddParagraph "[[kiikeli]]">>
+<<AddParagraph "[[Kiikeli]]">>
 <!-- salasanaboksi vastaus: kiikeli -->
 <<AddOption "Itseasiassa en tiedä sittenkään mihin mennä""osykbacktrack">>
 
@@ -898,7 +898,7 @@ Salasanaboksi osyk -->
 <<AddParagraph "[[Menen ainoaan paikkaan jossa on järkeä->seuraava_lokaatio]]">>
 
 :: seuraava_lokaatio {"position":"1100,850","size":"100,100"}
-<<AddParagraph "Jatkuu seuraavassa lokaatiossa...">>
+<<AddParagraph "Paikkaan jossa käyn töissä. [[Taidemuseo]]">>
 
 <!-- ****************** TAIDEMUSEO ********************** -->
 :: Taidemuseo {"position":"1100,50","size":"100,100"}
