@@ -493,10 +493,10 @@ Original story by The Worst men
 
 :: käyntikorttisi {"position":"900,800","size":"100,100"}
 <<textbox "$käyntikortti" "" "tarkista">>
-<<AddParagraph "Mitä käyntikortissa lukee? vastaus: 1234">>
+<<AddParagraph "Mitä käyntikortissa lukee?"">>
 
 :: tarkista
-<<if $käyntikortti is "1234">>
+<<if $käyntikortti is "Eve">>
 <<ItemGained "Käyntikortti">>
 <</if>>
 

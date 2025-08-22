@@ -1,0 +1,1085 @@
+:: StoryTitle
+BACHELOST
+
+
+:: StoryData
+{
+	"ifid": "B1E46906-738D-4617-BD15-CEF422C96FD8",
+	"format": "SugarCube",
+	"format-version": "2.30.0",
+	"start": "Intro",
+	"zoom": 0.6
+}
+
+
+:: Story Stylesheet [stylesheet]
+@import url(http://fonts.googleapis.com/css?family=David+Libre:400,700,400italic,700italic);
+@import url('https://fonts.googleapis.com/css?family=PT+Sans+Narrow&display=swap');
+
+html {
+  height: 100%;
+}
+
+body, tw-story
+{
+  font-family: 'David Libre', serif;
+  margin-left: 2em;
+  color: #d2d3cd;
+  height: 100%;
+}
+
+tw-hook
+{
+  margin-left: -25px;
+}
+
+#story {
+  height: 100%;
+  overflow-y: auto;
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+
+.passage {
+  line-height: 1.25;
+  font-size: large;
+  margin-left: 1.5em;
+}
+
+a {
+  color: #b6523a;
+  text-decoration: none;
+}
+
+a:hover {
+  color: white;
+  text-decoration: none;
+}
+a:active {
+  color: white;
+}
+
+.passage ol {
+  margin-left: -1em;
+}
+
+.psyche {
+  color: #705cbb;
+}
+
+.fysique {
+  color: #c6496b;
+}
+
+.intellect {
+  color: #6cc6ce;
+}
+
+.motorics {
+  color: #e4b934;
+}
+
+.speaker {
+  text-transform: uppercase;
+  margin-left: -1.5em;
+}
+
+
+.dim {
+  transition: opacity 0.5s;
+  opacity: 0.5;
+}
+
+.macro-timed-insert {
+	transition-duration: 2s;
+}
+
+.pastchoice {
+  color: #737c87;
+}
+
+.option {
+  font-weight: bold;
+}
+
+span.continueblock {
+  display: none;
+}
+
+a.macro-linkreplace {
+  background-color: #90280f;
+  color: white;
+  padding: 15px;
+  padding-bottom: 5px;
+  padding-top: 10px;
+  font-family: 'PT Sans Narrow', sans-serif;
+  margin-left: -1.5em;
+  display: block;
+}
+
+
+.green {
+  color: #98b48b; 
+  margin-left: -1.5em;
+}
+
+.CheckOverlay {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  pointer-events: none;
+  opacity: 0;
+  animation-name: Flash;
+  animation-duration: 2s;
+}
+
+#SuccessImg {
+  background: url(SuccessOverlay.png) no-repeat center;
+}
+
+#FailureImg {
+  background: url(FailureOverlay.png) no-repeat center;
+}
+
+@keyframes Flash {
+  0%  {opacity: 0}
+  20% {opacity: 1}
+  50% {opacity: 1}
+  100% {opacity: 0}
+}
+
+.CheckText {
+  color: white;
+  font-family: 'PT Sans Narrow', sans-serif;
+  position: absolute;
+  bottom: 25%;
+  left: 50%;
+  opacity: 0;
+  padding: 0.5em;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  animation-name: SlideAndFade;
+  animation-duration: 2.5s;
+  animation-delay: 1s;
+}
+
+#CheckSuccess {
+  background-color: #40ce68;
+  box-shadow: 0em 0em 0.2em 0.3em #40ce68;
+}
+
+#CheckFailure {
+  background-color: #90280f;
+  box-shadow: 0em 0em 0.2em 0.3em #90280f;
+}
+
+@keyframes SlideAndFade {
+  0% {opacity: 0.75; left: 45%}
+  10% {opacity: 1; left: 50%}
+  60% {opacity: 1; left: 50%}
+  100% {opacity: 0; left: 80%}
+}
+
+:: Story JavaScript [script]
+$(document).click(function(e) {
+	if($("span.continueblock").length) {
+		$("span.continueblock").first().removeClass('continueblock');
+	}
+	e.stopPropagation();
+	return false;
+});
+
+postdisplay['paragraph'] = function (taskName) {
+	//$('.paragraph').hide().fadeIn(10000);
+};
+
+$(document).on("keyup", function (e) {
+  if ((e.keyCode == 32) && ($("#ContinueBtn"))) {
+    $("#ContinueBtn").click();
+  }
+
+  if ((e.keyCode >= 49 && e.keyCode <= 57) && (document.getElementById("OptionList"))) {
+    var list = document.getElementById("OptionList");
+    var childIndex = e.keyCode - 49; // 0 for '1', 1 for '2', etc
+    if (list.children[childIndex]) {
+      list.children[childIndex].getElementsByClassName("link-internal")[0].click();
+    }
+  }
+});
+
+
+:: StoryInit {"position":"268,25","size":"100,100"}
+<<set $optionmap to new Map()>>
+<<set $motorics to ["composure", "hand/eye coordination", "interfacing", "reaction speed", "savoir faire", "perception", "perception (smell)", "perception (sight)", "perception (taste)", "perception (touch)", "perception (hearing)", "vapaalla oleminen"]>>
+<<set $intellect to ["conceptualization", "drama", "encyclopedia", "logic", "rhetoric", "visual calculus", "\?\?\?\?\?\?", "todellisuus"]>>
+<<set $fysique to ["electrochemistry", "endurance", "half light", "pain threshold", "physical instrument", "shivers", "pahaenteinen tunne", "\_\_\_\_enteinen tunne"]>>
+<<set $psyche to ["authority", "empathy", "esprit de corps", "inland empire", "suggestion", "volition", "töissäkäyvä ihminen", "nostalgia"]>>
+<<set $greentext to []>>
+<<set $paraAppendMode to false>>
+
+
+:: PassageHeader {"position":"407,27","size":"100,100"}
+<<set $paragraphs to []>>
+<<if $lastoption>>
+@@.speaker.pastchoice;You@@ @@.pastchoice;- $lastoption@@
+
+<</if>>
+
+
+:: PassageFooter {"position":"547,28","size":"100,100"}
+<<DisplayParagraphs>>\
+
+
+:: DisplayOptions [nobr] {"position":"546,144","size":"100,100"}
+<ol id="OptionList">
+<<for _optiontext, _optionpassage range $optionmap>>
+  <<capture _optionpassage, _optiontext>>
+    <li>
+      <<link _optiontext _optionpassage>><<set $lastoption to _optiontext>><</link>>
+    </li>
+  <</capture>>
+<</for>>
+</ol>
+<<set $optionmap to new Map()>>
+
+:: SkillSuccess [Widget widget]
+<<nobr>>
+<<widget "SkillSuccess">>
+<div id="SuccessImg" class="CheckOverlay"></div>
+<div id="CheckSuccess" class="CheckText">CHECK SUCCESS</div>
+<<SetSpeaker "">>
+<<AddParagraph "//Green flashes at the edges of your vision - a success.//">>
+<</widget>>
+<</nobr>>
+
+:: SkillFailure [Widget widget]
+<<nobr>>
+<<widget "SkillFailure">>
+<div id="FailureImg" class="CheckOverlay"></div>
+<div id="CheckFailure" class="CheckText">CHECK FAILURE</div>
+<<SetSpeaker "">>
+<<AddParagraph "//Red flashes at the edges of your vision - a failure.//">>
+<</widget>>
+<</nobr>>
+
+:: PassiveSkill [Widget widget] {"position":"403,146","size":"100,100"}
+<<nobr>>
+<<widget "PassiveSkill">>
+<<set _skillname to ($args[0].toLowerCase())>>
+<<set _skillresult to "">>
+<<if $args[1]>>
+<<set _skillresult to ("[" + $args[1] + ": " + $args[2] + "]")>>
+<</if>>
+<<if $motorics.includes(_skillname)>>
+<<set $currentspeaker to ("@@.motorics.speaker;" +
+_skillname + ' ' +
+"@@")>>
+<<elseif $intellect.includes(_skillname)>>
+<<set $currentspeaker to ("@@.intellect.speaker;" +
+_skillname + ' ' +
+"@@")>>
+<<elseif $fysique.includes(_skillname)>>
+<<set $currentspeaker to ("@@.fysique.speaker;" +
+_skillname + ' ' +
+"@@")>>
+<<elseif $psyche.includes(_skillname)>>
+<<set $currentspeaker to ("@@.psyche.speaker;" +
+_skillname + ' ' +
+"@@")>>
+<</if>>
+<<if _skillresult>>
+<<set $currentspeaker += _skillresult>>
+<</if>>
+<<set $currentspeaker += " - ">>
+<</widget>>
+<</nobr>>
+
+
+:: Speaker [widget] {"position":"272,152","size":"100,100"}
+<<nobr>>
+<<widget "speaker">>
+@@.speaker;
+$args[0] -
+@@
+<</widget>>
+<</nobr>>
+
+
+:: AddOption [widget] {"position":"273,265","size":"100,100"}
+\<<widget "AddOption">>\<<run $optionmap.set($args[0], $args[1])>>\<</widget>>\
+
+
+:: DisplayParagraphs [widget] {"position":"401,262","size":"100,100"}
+<<widget "DisplayParagraphs">><<set _paragraph to $paragraphs[0]>>\
+<<run $paragraphs.deleteAt(0)>>\
+<span class="paragraph"><<print _paragraph>></span>
+<<if $paragraphs.length > 0>>
+<<linkreplace "@@#ContinueBtn;JATKA ➤@@" t8n>><<DisplayParagraphs>><</linkreplace>>\
+<<else>>\
+<<include DisplayOptions>>
+<</if>>
+<<timed 0.5s>><<script>>
+var paragraphs = document.getElementsByClassName('paragraph');
+if (paragraphs.length > 1) {
+	paragraphs[paragraphs.length-2].classList.add("dim");
+}
+<</script>><</timed>>\
+<</widget>>
+
+
+:: SetSpeaker [widget] {"position":"674,151","size":"100,100"}
+<<widget "SetSpeaker">><<set $currentspeaker to ("@@.speaker;" + $args[0] + "@@ - ")>><</widget>>
+
+:: BlankSpeaker [widget] {"position":"1225,100","size":"100,100"}
+<<widget "BlankSpeaker">><<set $currentspeaker to "">><</widget>>
+
+
+:: AddParagraph [widget] {"position":"546,268","size":"100,100"}
+<<nobr>>
+<<widget "AddParagraph">>
+<<set _para to "">>
+<<if $paraAppendMode is true>>
+<<for _text range $greentext>>
+<<set _para to (_para + _text + "<br /><br />")>>
+<</for>>
+<<set $greentext to []>>
+<<set $paraAppendMode to false>>
+<</if>>
+<<set _para to (_para + $currentspeaker + $args[0])>>
+<<run $paragraphs.push(_para)>>
+<</widget>>
+<</nobr>>
+
+:: StoryAuthor {"position":"268,439","size":"100,100"}
+Original story by The Worst men
+
+
+:: StoryShare {"position":"526,432","size":"100,100"}
+[["@ampepers on Twitter"|https://twitter.com/ampepers]]
+[["Repo with the source code"|https://github.com/apepers/DiscoElysiumTwineMacros/]]
+
+:: GreenTextWidgets [widget] {"position":"400,600","size":"100,100"}
+<<nobr>>
+<<widget "TaskComplete">>
+<<run $greentext.push("@@.green;Tehtävä suoritettu: " + $args[0] + "@@")>>
+<<if $args[1]>>
+<<run $greentext.push("@@.green;Sait kokemuspisteitä: +" + $args[1] + "@@")>>
+<</if>>
+<<set $paraAppendMode to true>>
+<</widget>>
+
+<<widget "SecretTaskComplete">>
+<<run $greentext.push("@@.green;Salainen tehtävä suoritettu: " + $args[0] + "@@")>>
+<<if $args[1]>>
+<<run $greentext.push("@@.green;+" + $args[1] + " XP: sait kokemuspisteitä@@")>>
+<</if>>
+<<set $paraAppendMode to true>>
+<</widget>>
+
+<<widget "NewTask">>
+<<run $greentext.push("@@.green;Uusi tehtävä: " + $args[0] + "@@")>>
+<<set $paraAppendMode to true>>
+<</widget>>
+
+<<widget "ItemGained">>
+<<run $greentext.push("@@.green;Sait esineen: " + $args[0] + "@@")>>
+<<set $paraAppendMode to true>>
+<</widget>>
+
+<<widget "ItemLost">>
+<<run $greentext.push("@@.green;Menetit esineen: " + $args[0] + "@@")>>
+<<set $paraAppendMode to true>>
+<</widget>>
+
+<<widget "ThoughtGained">>
+<<run $greentext.push("@@.green;Sait ajatuksen: " + $args[0] + "@@")>>
+<<set $paraAppendMode to true>>
+<</widget>>
+
+<<widget "LevelUp">>
+<<run $greentext.push("@@.green;Kehityit tason ylöspäin!@@")>>
+<<set $paraAppendMode to true>>
+<</widget>>
+
+<</nobr>>
+
+<!-- ****************** PROLOGI ********************** -->
+:: Intro [nobr] {"position":"1500,800","size":"100,100"}
+<<BlankSpeaker>>
+
+<<AddParagraph "[[rautatieasemalle]] [[Kaarle]] [[HELMEEN]] [[OSYK]] [[Kiikeli]] [[Franzen]] [[Taidemuseo]] [[Päätös]]">>
+<<AddParagraph "Herätessäsi suussasi on karvas maku ja saat vaivoin silmäsi auki. Huomaat, että morsiamesi on hereillä. Saat itsesi sanomaan hänelle jotain, ja hän alkaa heti jutella takaisin. Saat puhetulvasta irti kysymyksen">>
+
+<<SetSpeaker "Morsiamesi">>
+<<AddParagraph "\"Meeksä keittää kahvin?\"">>
+
+<<BlankSpeaker>>
+<<AddParagraph "Nyökkäät vastaukseksi ja nouset yrittäen näyttää siltä, että mielesi ei tekisi oksentaa.">>
+<<AddParagraph "Raahustat kohti kahvinkeitintä ja tunnet edelleen ajatustesi kieppuvan. Tuntuu, kuin jotain olisi pahasti pielessä.">>
+<<AddParagraph "Morsiamesi käyttäytyy kuin kaikki olisi kuin ennenkin, arjen harmautta ja normaaliutta. Vai onko nyt arki? Hetkinen, miksi et muista sitä?">>
+<<SetSpeaker "Morsiamesi">>
+<<AddParagraph "\"Onks meille tullu hesari?\"">>
+
+<<BlankSpeaker>>
+<<AddParagraph "Etsit sitä kirottua lehteä katseellasi, mutta huone huojuu ja kieppuu ympärilläsi. Yrität vain parhaasi pysyä pystyssä">>
+<<SetSpeaker "">>
+<<AddParagraph " \"Mitä oikein tein eilen\"?">>
+
+<<BlankSpeaker>>
+<<AddParagraph " Yrityksistäsi huolimatta et pysty palauttamaan mieleesi yhtään muistoa eiliseltä.">>
+
+<<SetSpeaker "Morsiamesi">>
+<<AddParagraph "\"Onkohan pulut yrittäny mennä noihin lamppulaatikoihin?\"">>
+
+
+<<BlankSpeaker>>
+<<AddParagraph "Et halua häiritä morsiantasi kertomalla siitä omituisesta tunteesta, jonka tunnet vatsanpohjassasi. On tärkeämpiäkin asioita, joista huolehtia, sinunhan täytyy saattaa hänet juna-asemalle.">>
+
+<<AddParagraph "Lähtiessänne ovesta ulos tunnet taas kihelmöintiä vatsanpohjassasi, aivan kuin jotain pahaa olisi tapahtumassa. Mutta mitä pahaa voisi tapahtua? Menette vain [[rautatieasemalle]]">>
+
+<<ThoughtGained "Pahaenteinen Tunne">>
+
+<!-- ****************** RAUTATIEASEMA ********************** -->
+
+:: rautatieasemalle {"position":"1500,800","size":"100,100"}
+<<BlankSpeaker>>
+<<AddParagraph "Vaunun ovien sulkeutuessa Eveliinan poissaolo realisoituu. Mitä töissäkäyvän ihmisen tulisi edes tehdä vapaapäivänä. Vaihtoehdot ovat rajalliset tässä kaupungissa.">>
+<<AddParagraph "Kävelet asematunneliin ja pysähdyt tuijottamaan tyhjää vitriiniä, joka yllyttää päässä hakkaavan kivun äärimmilleen ja vatsanpohjalla maannut pahaenteinen tunne nousee rintalastasi taakse.">>
+<<AddParagraph "Tämä ikkuna tarkoitti sinulle joskus jotakin. Mutta et pysty ymmärtämään otsalohkosi mielenosoituksen yli mitään.">>
+<<PassiveSkill "Töissäkäyvä ihminen" "Easy" "Success">>
+<<AddParagraph "Olet selkeästi vielä työmoodissa ja se heikentää kognitiotasi merkittävästi. Suosittelen vaihtamaan virallisesti vapaalle">>
+<<AddOption "[Töissäkäyvä ihminen] Vaihda vapaalle (juo vapaalle siirtymis potion)" "vapaalle">>
+
+:: vapaalle {"position":"1700,800","size":"100,100"}
+<<BlankSpeaker>>
+<<AddParagraph "Vapaalla Oleminen hälventää tehokkaasti päässäsi aiemmin jyllänneen lakkaamattoman jomotuksen. Pahaenteinen tunne siirtyy takaisin vatsasi pohjalle ja värit alkavat myös virtaamaan tyhjään näyteikkunaan tuoden mukanaan hurraavan yleisön äänet heidän todistaessaan edessä tapahtuvaa taidespektaakkelia.">>
+<<AddParagraph "Ymmärrät muistojen kautta myös erittäin tärkeän seikan.">>
+<<SetSpeaker "">>
+<<AddParagraph "Minä Tiedän Asioita.">>
+<<BlankSpeaker>>
+<<AddOption "[Töissäkäyvä ihminen] Mieti Asioita Joita Tiedät siitä mitä Vapaalla tapahtuu" "töissäkäyvä">>
+<<AddOption "[Pahaenteinen tunne] Mieti Asioita Joita Tiedät paikoista joissa kaikki alkaa" "pahaenteinen">>
+
+
+:: töissäkäyvä {"position":"1700,900","size":"100,100"}
+<<AddParagraph "Vapaalla ei tehdä töitä, Vapaalla poistutaan taloista ja mennään toisiin taloihin. Taloihin joissa voi vaihtaa palkkaa hyödykkeisiin ja palveluihin. Hyödykkeitä kuten juomia, palveluita kuten tarjoilua. Näissä taloissa on muita Vapaalla Olijoita. Vapaalla Olijoita jotka myös Tietävät Asioita ja kertovat niistä mielellään muille. Monesti halusi tai ei.">>
+<<AddOption "Tiedän mihin mennä ja lähden etsimään sieltä Tietäjää." "tiedän">>
+<<AddOption "[Pahaenteinen tunne] En tiedä mihin mennä. Voisin vielä miettiä mitä Asioita Tiedän paikoista joissa kaikki alkaa" "pahaenteinen">>
+
+
+:: pahaenteinen {"position":"1700,1000","size":"100,100"}
+<<AddParagraph "Paikat joissa kaikki alkaa ovat paikkoja joissa tapahtuu asioita. Ensimmäisiä asioita. Ensitapaamisia ja ensivaikutelmia. Ensimmäisiä kosketuksia ja ensimmäisiä muistoja yhdessä.">>
+<<AddOption "Tiedän mihin mennä ja mitä etsiä sieltä." "tiedän">>
+<<AddOption "[Töissäkäyvä ihminen] Voisin vielä miettiä Asioita Joita Tiedän Vapaalla Olemisesta" "töissäkäyvä">>
+
+:: tiedän {"position":"1700,1200","size":"100,100"}
+<<AddParagraph "Vapaalla Oleminen antaa minulle selkeän suunnan ja askel tuntuu kevyemmältä. On ihanaa että myös ilman työn vapauttavaa struktuuria voi hetken aikaa tietää mitä onkaan tekemässä. Mutta pahaenteinen tunne ei ole vielä helpottanut. Tuntuu, että on vielä enemmän Asioita Joita Tietää. Kenties Vapaalla Olemis aktiviteettien jatkaminen auttaa siihen.">>
+<<AddOption "[Selkeä suunta] Olen 100 % oikeassa kohteessa" "ratkaisu">>
+<<AddOption "[Pahaenteinen tunne] Olin liian itsevarma. Minun pitää miettiä enemmän Asioita Joita Tiedän" "pahaenteinen">>
+
+:: ratkaisu {"position":"1700,1400","size":"100,100"}
+<<AddParagraph "Näetkö jo kaarevan sisäänkäynnin, ehkä tietäjä odottaa sinua jo holvin perällä">>
+<<AddOption "[Selkeä suunta] Astun sisään" "Kaarle">>
+<<AddOption "[Epätoivo] En ymmärrä mitä minun täytyy tehdä" "rautalanka">>
+
+:: rautalanka {"position":"1700,1400","size":"100,100"}
+<<AddParagraph "Et ole vielä kunnolla vaihtanut vapaalle. Ei se mitään. On aika liikkua paikkaan, jossa tapasit Eveliinan ensimäistä kertaa. Matkasi on vasta alussa">>
+<<AddOption "[Selkeä suunta] Astun sisään" "Kaarle">>
+<<AddOption "[Epätoivo] En ymmärrä mitä minun täytyy tehdä" "apina">>
+
+:: apina {"position":"1700,1400","size":"100,100"}
+<<AddParagraph "... MENE JUMPRU NIMISEEN PUBIIN, TUNNETAAN MYÖS NIMELTÄ KAARLENHOLVI. OSOITE ON Kauppurienkatu 6, 90100 Oulu">>
+<<AddOption "[Selkeä suunta] Astun sisään" "Kaarle">>
+
+<!-- ****************** KAARLE ********************** -->
+:: Kaarle {"position":"1100,50","size":"100,100"}
+<<AddParagraph "Astun sisään punaiseen puupaneloituun baaritilaan. Tähän aikaan aamupäivästä olen yleensä kahvitauolla taiteesta, enkä jyskyttävän hiljaisessa juottolassa.">>
+<<AddParagraph "Mutta täällä tapahtui asioita. Asioita ensimmäistä kertaa, joista minä tiedän, mutta tiskillä istuva hahmo tuntuu tietävän asioista ennen kuin ehdin edes ajatella niitä. Tietenkin. **Tietäjä**. Tervehdin häntä ja hän tarjoaa minulle oluen.">>
+<<PassiveSkill "Electrochemistry" "Easy" "Success">>
+<<AddParagraph "Nyt en ole töissä, olen vastaanottavainen. Nostan tuopin huulilleni mukisematta.">>
+<<AddParagraph "Ensimmäinen kulaus tasaa paineet, mutta pahaenteinen tunne jää rintakehäni alle kuin muistutus siitä, että jotain puuttuisi. Aivan. Minun täytyy saada Tietää. Minun täytyy saada tietää jotain. Vähintäänkin asioista enemmän.">>
+<<AddParagraph "Tietäjä on aloittanut puhumisen. Hän puhuu arkipäiväisyyksiä ja pyörittää tuoppiaan kuin kristallipalloa.">>
+<<BlankSpeaker>>
+<<AddParagraph "Voit [[kysyä suoraan]] mitä Tietäjä tietää, tai [[kuunnella horinaa]] ja leikkiä mukana.">>
+
+:: kysyä suoraan {"position":"925,250","size":"100,100"}
+<<AddParagraph "Yritän siirtyä suoraan asiaan, mutta saan vastaukseksi vain kuulumispuuroa — lämmintä vaahtoa ilman nestettä. Tietäjä ei anna, ennen kuin saa. Pieni todiste kulkee mukana vaihdannan kautta.">>
+<<SetSpeaker "">>
+<<AddParagraph "[[Tiedän mitä antaa]] tai voin myöntää että [[en tiedä mitä antaa]].">>
+
+:: kuunnella horinaa {"position":"1275,250","size":"100,100"}
+<<AddParagraph "Tietäjä puhuu niin kuin hän puhuu. Ensimmäisiä kertoja kunnollisessa palkkatyössä, ensikertaa pisteessä, jossa ei ole suuria velvollisuuksia. Vihdoin kykenee ostamaan ja tekemään asioita. Kykenee olla huolehtimatta toimeentulosta.">>
+<<AddParagraph "Mutta kuitenkin – sydämen vihlaisu yksiön yksinäisyydessä on totisinta totta. Sydäntä ei voi ostaa, eikä likvidoida. Puute on kohteesta, jolle voisi tarjota tämän kaiken, minkä on valmis antamaan.">>
+<<PassiveSkill "Töissä käyvä ihminen" "Medium" "Success">>
+<<AddParagraph "Minäkin olen palkkatöissä ja minulla on likvidaa.">>
+<<BlankSpeaker>>
+<<AddParagraph "[[Ymmärrän vihjeen]] mitä Tietäjä haluaa, tai jatkan kuuntelua koska [[en vieläkään ymmärrä]].">>
+
+:: Tiedän mitä antaa {"position":"825,450","size":"100,100"}
+<<AddParagraph "Mitä käyntikortissa lukee?">>
+<<textbox "$käyntikortti" "" "tarkista_lompakko">>
+
+:: en tiedä mitä antaa {"position":"1025,450","size":"100,100"}
+<<PassiveSkill "Pahaenteinen tunne" "Easy" "Success">>
+<<AddParagraph "En tiedä, mitä täytyisi antaa. Jatkan Tietäjän horinan kuuntelua.">>
+<<AddParagraph "[[jatka kuuntelemaan->viimeinen yritys]]">>
+
+:: Ymmärrän vihjeen {"position":"1175,450","size":"100,100"}
+<<AddParagraph "Käyntikortti piilotettu Valtterin lompakkoon.">>
+<<AddParagraph "Mitä käyntikortissa lukee?">>
+<<textbox "$käyntikortti" "" "tarkista_lompakko">>
+
+:: en vieläkään ymmärrä {"position":"1375,450","size":"100,100"}
+<<PassiveSkill "Pahaenteinen tunne" "Easy" "Success">>
+<<AddParagraph "En tiedä, mitä täytyisi antaa. Jatkan Tietäjän horinan kuuntelua.">>
+<<AddParagraph "[[jatka kuuntelemaan->viimeinen yritys]]">>
+
+:: viimeinen yritys {"position":"1200,650","size":"100,100"}
+<<AddParagraph "Tietäjä vaatii tietonsa pantiksi jotain. On olemassa kartonki, jolla voi saada toiselta kaiken, mitä haluaa. Kun kukkaro ei käske, käsi löytää sieltä arvokkaimman tarjouksen.">>
+<<BlankSpeaker>>
+<<AddParagraph "[[Olen varma]] mitä minun pitää antaa Tietäjälle, tai [[olen epätoivoinen]] enkä ymmärrä mitään!">>
+
+:: Olen varma {"position":"1100,850","size":"100,100"}
+<<PassiveSkill "Selkeä suunta" "Easy" "Success">>
+<<AddParagraph "Käyntikortti piilotettu Valtterin takin povitaskuun.">>
+<<AddParagraph "Mitä käyntikortissa lukee?">>
+<<textbox "$käyntikortti" "" "tarkista_povitasku">>
+
+:: olen epätoivoinen {"position":"1300,850","size":"100,100"}
+<<PassiveSkill "Epätoivo" "Hard" "Success">>
+<<AddParagraph "En ymmärrä, mitä täytyisi antaa, ja mistä. Olen hukassa! Tekisi mieli kiljua!">>
+<<SetSpeaker "">>
+<<AddParagraph "Voit palata [[alkuun->Baari]] tarkastelemaan kaikkia vihjeitä uudelleen, tai [[luovuttaa täysin]].">>
+
+:: luovuttaa täysin {"position":"1300,1050","size":"100,100"}
+<<AddParagraph "Olen täysin hukassa. Tietäjä näyttää vääntävän vastauksen rautalangasta:">>
+<<AddParagraph "Käyntikortti. Lompakossa tai povitaskussa. Siinä lukee 'Eve'.">>
+<<AddParagraph "[[Anna käyntikortti->loppu]]">>
+
+:: tarkista_lompakko
+<<if $käyntikortti is "Eve">>
+<<ItemGained "Käyntikortti">>
+<<AddParagraph "[[Ojennat käyntikortin Tietäjälle->loppu]]">>
+<<else>>
+<<AddParagraph "Se ei ole oikea sana. [[Yritä uudelleen->Tiedän mitä antaa]]">>
+<</if>>
+
+:: tarkista_povitasku
+<<if $käyntikortti is "Eve">>
+<<ItemGained "Käyntikortti">>
+<<AddParagraph "[[Ojennat käyntikortin Tietäjälle->loppu]]">>
+<<else>>
+<<AddParagraph "Se ei ole oikea sana. [[Yritä uudelleen->Olen varma]]">>
+<</if>>
+
+:: loppu {"position":"1200,1250","size":"100,100"}
+<<AddParagraph "Tietäjä ottaa käyntikortin ja hymyilee salaperäisesti. Nyt hän on valmis jakamaan tietonsa kanssasi.">>
+
+<<AddParagraph "Jotkut ihmiset ovat tulleet jäädäkseen, mutta kenen sanoihin voit luottaa, Mr. Moilman? Hallitsetko tunteesi samalla tavoin kuin oksennuksesi? Tunnetko pysyvyyden halkeavan? Nimet muuttuvat merkityksiksi, merkitykset sijainneiksi. Missä tulisi seuraavaksi olla? Ketä kuunnella? Palaako täällä joku? Jatka kaupungin [[HELMEEN]]">>
+
+<!-- ****************** HELMI ********************** -->
+::HELMEEN
+<<BlankSpeaker>>
+<<AddParagraph "Tietäjän johtama tie etsivän luokse tuntuu kuin olisit marssimassa syvänteeseen. Pahaenteinen tunne taistelee autosomaattisen hermostosi kanssa kontrollista.">>
+
+
+<<AddParagraph "Selkeys jonka olit saanut Vapaalla Olemisesta tuntuu hälvenevän vähän joka askeleella">>
+
+<<AddParagraph "Tuntuu silti kummallisen kotoisalta, kuin olisit kävellyt saman tien tuhansia kertoja aikaisemmin">>
+
+<<PassiveSkill "vapaalla oleminen">>
+<<AddParagraph "Kaikki tiet Vapaalla Ollessa johtavat lopulta tähän paikkaan. Ainakin ennen johtivat. Täyden palvelun taloon.">>
+
+<<BlankSpeaker>>
+<<AddParagraph "Täyden palvelun talossa kotoisa lämpö syleilee minua joka puolelta. Mahdollisuudet tässä talossa hyvälle ajalle tuntuvat loputtomilta, ennen kuin huomaankaan istun jo [[pöydässä]] tuoppi edessäni">>
+
+::pöydässä
+<<PassiveSkill "pahaenteinen tunne" "Impossible" "Failure">>
+<<AddParagraph "Pöydässäsi istuu jo mies. Hänestä huokuu valtava stressaantunut energia. Mies tuntuu kävelevän edestakaisin jatkuvasti vaikka istuu hiljaa paikoillaan. Tunne nousee vatsanpohjastasi suoraan kurkkuun ja sinua pyörryttää">>
+
+<<AddOption "SUOJAUDU! KATSO TOISEEN SUUNTAAN! ÄLÄ PULLAA AGGROJA!" "suojaudu">>[[|suojaudu]]
+<<AddOption "[Vapaalla Oleminen] Etsi hänen katseensa. Kohtaa se. Olet Vapaalla kuten hänkin. Haluat kontaktia ja puhua Asioista Joita Tiedät " "vapaacheck">>[[|vapaacheck]]
+
+:: suojaudu
+<<BlankSpeaker>>
+<<AddParagraph "Tunne helpottaa vienosti. Tunnet silti hänen olemuksensa pöydässä ja se liimaa sinut penkkiin kiinni. Paniikinsekainen tunne puristaa rintakehässäsi. Mikä tämä mies oikein on">>
+<<AddOption "[Töissäkäyvä ihminen] Mieti mikä tämän miehen elämässä aiheuttaa tuollaisen olemuksen""workcheck">>[[|workcheck]]
+<<AddOption "[Vapaalla Oleminen] Minä varmaan ylireagoin. Hän on Vapaalla kuten minäkin. Ei kontaktin ottamisessa häneen ole varmasti mitään pahaa" "vapaacheck">>[[|vapaacheck]]
+
+:: vapaacheck
+
+<<PassiveSkill "vapaalla oleminen" "Impossible" "Failure">>
+<<AddParagraph "EI EI EI TÄMÄ MIES EI OLE VAPAALLA KATSO POIS">>
+
+<<BlankSpeaker>>
+<<AddParagraph "On myöhäistä katsoa pois. Miehen Vanhan Miehen Silmien katse pureutuu syvälle sisimpääsi ja stressi valuu sinuun.">>
+<<AddParagraph "Paha olo alkaa kasvaa rintakehässäsi kestämättömäksi. Sydämesi ja jalkasi pomppivat samassa rytmissä.">> 
+<<AddParagraph "Haluaisit kovasti puhua pahasta olosta sisälläsi, mutta et tunne olevasi turvallisessa seurassa.">> 
+<<AddParagraph "Voisipa tämä ihminen keskustella kanssasi asiasta joka on sinulle tärkeää ja määrittää sinua yksityishenkilönä. Asian joka antaa sinulle vapautta liikkumisessasi verrattusa muihin ihmisiin.">>
+<<AddParagraph "Siten voisit tuntea olosi tarpeeksi turvalliseksi, että voisit pyytää apua">>
+
+<<AddOption "[Töissäkäyvä ihminen]Yritä parhaasi rikkoa katsekontakti. Mikä tämä mies oikein on?" "workcheck">>[[|workcheck]]
+<<AddOption "Tiedän mikä hän on ja mistä keskustella hänen kanssaan murtaakseni jään" "helmisolution">>[[|helmisolution]]
+
+:: workcheck
+<<PassiveSkill "töissäkäyvä ihminen">>
+<<AddParagraph "Mies on vapalla mutta myös töissä. Ikuisessa välitilassa ilman rakennetta ja toivoa rakenteesta. Kirottu yksinäisiin päiviin kotona vailla toimistoa tai sen tuomaa sosiaalista kanssakäymistä. He kaipaavat jatkuvasti tunnustusta ja rohkaisua, että heidän työnteon tapansa on yhtä ahkeraa ja parempaa kuin muilla.">>
+
+<<AddOption "Tiedän mikä hän on ja mistä keskustella hänen kanssaan murtaakseni jään" "helmisolution">>[[|helmisolution]]
+<<AddOption "[Vapaalla Oleminen] Uskaltaudu katsomaan häntä silmiin, että voit ottaa kontaktia ja ymmärtää häntä paremmin." "vapaacheck">>[[|vapaacheck]]
+
+:: helmisolution
+
+<<AddParagraph "Tiesit juuri mistä keskustella miehen kanssa ja osasit tunnistaa hänen työntekotyylinsä.">> 
+<<AddParagraph "Miehen olemus rentoutuu, tunnen hänen katseensa lukon hellittävän ja pystyn vihdoin näkemään hänet kokonaisena. Miehellä on yllään reissussa rähjääntynyt trenssitakki ja tuhkakupista päätellen hän on ketjupolttanut pöydässä jo tunteja.">>
+
+<<PassiveSkill "Töissäkäyvä ihminen" "easy" "Success">>
+<<AddParagraph "Etsivä">>
+
+<<AddParagraph "Etsivä avautuu ongelmastaan ja hän antaa [[avaimen jatkoon]]"
+
+:: backtrackhelmi
+<<AddParagraph "Jos olen täysin kujalla voin myös aina pyytää tietäjältä apua">>
+
+<<AddOption "[Töissäkäyvä ihminen] Mieti mikä tämän miehen elämässä aiheuttaa tuollaisen olemuksen""workcheck">>[[|workcheck]]
+<<AddOption "[Vapaalla Oleminen] Uskaltaudu katsomaan häntä silmiin, että voit ottaa kontaktia ja ymmärtää häntä paremmin." "vapaacheck">>[[|vapaacheck]]
+
+:: avaimen jatkoon
+<<SetSpeaker >>
+<<AddParagraph "Etsivän keissien ratkaisuissa ei tuntunut olevan mitään järkeä. Ne tuntuivat näyttävän minun olevan sekaantuneen (mitä ikinä juttuja ne artun keissit olivatkaan). Ja mitä ihmeen tekemistä minulla olisi Lex Luthorin kanssa?">>
+
+<<PassiveSkill "Pahaenteinen tunne" "Easy" "Success">>
+<<AddParagraph "Tiedät jo oikean vastauksen sinun pitää vain etsiä sitä syvempää sisältä">>
+<<AddOption "[Pahaenteinen tunne] Kaiva syvempää. Pohjalle asti." "totuus">>[[|totuus]]
+<<AddOption "Ah itseasiassa ei minun tarvitse tietää. Kiitos kysymästä. Kaikki on aivan täysin ok." "cope1">>[[|cope1]]
+
+:: cope1
+<<ThoughtGained "Cope">>
+
+<<SetSpeaker "Sinä">>
+<<AddParagraph "Kaikki on itseasiassa aivan täydellisesti. Nyt kun oikein asiaa ajattelen tämä päivä on vallan mainio ja vointini on mitä parahin. Olen Vapaalla ja Vapaalla Oleminen on ihanaa">>
+
+<<PassiveSkill "vapaalla oleminen">>
+<<AddParagraph "Älä sekoita minua tähän">>
+
+<<AddOption "[Pahaenteinen tunne] Lopeta tämä pelleily. Vastaus on ilmiselvä. Ole kiltti poika ja kaiva se esiin" "totuus">>[[|totuus]]
+ <<AddOption "Vaikka kaikki ei olisi hyvin lopultahan sillä ei ole edes väliä, jos asiaa todella miettii" "cope2">>[[|cope2]]
+
+:: cope2
+<<ThoughtGained "Cope upgraded to Superior Cope">>
+<<SetSpeaker "Sinä">>
+<<AddParagraph "Niin se on aivan täysin totta. Sillä ei edes ole mitään väliä, jos olisikin jokin asia, joka ei ole hyvin. Asiat ovat vain asioita ja ne ovat täysin ihmisten kontrolloitavissa. Hyvä tai huono on vain ihmisten konstruktio, joka on täysin mielivaltainen ja kontekstisidonnainen ja irti todellisuudesta . Todellisuudesta joka on tietenkin se, että kaikki on äärimmäisen hyvin tällä hetkellä">>
+
+<<AddOption "[Pahaenteinen tunne] Mutta eihän se tarkoita... Mitä sinä?? Okei.. kyllä tässä ennen pitkää palaat takaisin maanpinnalle""totuus">>[[|totuus]]
+<<AddOption "Jos todella todella miettii... Miksi meneillään edes on narratiivi siitä että asiat eivät olisi hyvin. Kaikki aivan ilmiselvästi on. Eikö kukaan muu tajua sitä?" "cope3">>[[|cope3]]
+
+:: cope3
+<<ThoughtGained "Superior Cope upgraded to Divine Cope">>
+<<SetSpeaker "Sinä">>
+<<AddParagraph "Niinpä! Kukaan muu kuin minä ei selkeästi kykene ymmärtämään mistä täällä on oikeasti kyse. Kenties olen vaan vähän erityisempi kuin kaikki muut.">>
+<<AddParagraph "En sanoisi, että olen älykkäämpi kuin kukaan muu, kenties keskivertoa vähän älykkäämpi">> 
+<<AddParagraph "Muiden ongelma on, että he eivät pysty suhtautumaan näihin asioihin loogisesti vaan heillä menee välittömästi tunteisiin kun kukaan kyseenalaistaa heidän pakkomielteisen suhtautumisen asioihin.">>
+
+<<AddOption "He ovat kyllä varsin vihaisia eivätkö vain. Varmaan johtuu siitä, että he ilmiselvästi kaljuuntuvat. Hei haluatko lähteä vetämään täältä johonkin chillimpään paikkaan? " "copefinal">>[[|copeFinal]]
+
+:: copefinal
+<<SetSpeaker "Sinä">>
+<<AddParagraph "Ainoastaan jos se on paikka ajoilta jotka tuntuivat yksinkertaisemmilta. Missä luotiin ja vahvennettiin läpi elämän kestäviä ystävyyksiä. Ehkäpä jonkinlainen rakennus joka edustaa jugendilaista tyylisuuntaa. Kyllä sellainen paikka tuntuisi oikealta.">>
+
+<!-- Tiedän itseasiassa täydellisen paikan mihin mennä, mutta jos oloni on epävarma voin aina kysyä tietäjältä.
+Salasanaboksi osyk -->
+<<AddParagraph "Go to [[OSYK]]">>
+
+:: OSYK
+<<SetSpeaker "Sinä">>
+<<AddParagraph "Ah täällä minun kuuluukin olla. Tottai kai kuulun näiden ihastuttavan keltaisten seinien huomaan. Minulla on kaikki hyvin ja huoletonta.">>
+
+<<AddParagraph "Elämässäni ei ole työpaikkoja, veroja, organisointihuolia tai epämääräisiä syytöksiä etsiviltä. Vain koulutusta, lorvailua ja jatkuvaa juhlaa.">>
+
+<<ThoughtGained "Divine Cope upgraded to Nostalgia">>
+
+<<AddParagraph "Olen Vapaalla enemmän kuin koskaan.">>
+
+<<AddParagraph "Miten lämpimästi aurinko hiveleekään. Ainoa asia mikä tästä ihanasta päivästä puuttuu on ystävät.">>
+
+<<PassiveSkill "Nostalgia" "Irrelevant" "Success">>
+<<AddParagraph "Mikä sattuma sieltä he saapuvatkin!">>
+
+<<SetSpeaker "Sinä">>
+<<AddParagraph "Ah aivan totta. Siellä ovat erinomaiset ystäväni. Ketkäpä muutkaan [[kuin]]...">>
+
+:: kuin
+<<AddParagraph "Ööh... Palaan tähän myöhemmin\.\.\. Mutta sittenhän on [[tietenkin]]\.\.\.">>
+
+:: tietenkin
+<<AddParagraph "Hmm niin. Mutta kuka voisi [[unohtaa]]...">>
+
+:: unohtaa
+<<AddParagraph "Hah. Niin en ainakaan minä...">>
+<<AddParagraph "Toissijaista kenen kanssa olen ja missä. Tärkeintä on hyvä aika ja yhteishenki.">>
+
+<<AddParagraph "Vietetään kultaisia hetkiä yhdessä ystävät">>
+
+<<AddParagraph "Kun olet hengannut ystäviesi kanssa tarpeeksi jatka [[postosyk]]">>
+
+<<SetSpeaker "Sinä">>
+<<AddParagraph "Ajanviettomme aikana ystäväni näyttivät hetki hetkeltä tunnistettavimmalta ja yhteinen aika tuntui voimistavan minua entisestään.">>  
+<<AddParagraph "Saamani yhteishenki tuntui nostattavan minut aivan uudelle ymmärryksen tasolle. ">>
+<<ItemGained "Ystävyyden voima +3">>
+
+<<SetSpeaker "Ystäväni">>
+<<AddParagraph "\"Joskus pitää tietää mistä on tullut jotta voi tietää mihin on menossa\"">>
+
+<<SetSpeaker "Sinä">>
+<<AddParagraph "Mutta mihin todella olin menossa. Aiempi kiire ja hätä loistivat poissaolollaan, mutta silti sisälläni oli pieni palava tuli eteenpäin menemisestä.">>
+
+<<AddOption "[Ystävyyden voima] Kysyn ystäviltä mihin he haluaisivat mennä""aasit">>[[|aasit]]
+<<AddOption "[Nostalgia] Mihin itse tavallisesti menen tällaisina päivinä""nostalgy">>[[|nostalgy]]
+<<AddOption "[____enteinen tunne] Erikoinen olo... Ei huono tietenkään, mutta erikoinen ""kangastus">>[[|kangastus]]
+
+:: aasit
+<<SetSpeaker "Ystävät">>
+<<AddParagraph "\"Hmm... Aasit ensin, seuraavana kasvot. Kyse on tasapainosta\"">>
+<<BlankSpeaker>>
+<<AddParagraph "He toteavat tämän yhdessä kuorossa. Tavalliseen tapaan avaamatta suutaan. Muistat olevasi keskeisessä osassa tämän merkitystä. Mutta et saa päähäsi koko jutun juurta">>
+
+<<AddOption " [Selkeä suunta] Tiedän itseasiassa täydellisen paikan""osyksolution">>[[|osyksolution]]
+<<AddOption "[Nostalgia] Mietin vielä mihin itse menisin tällaisena päivänä""nostalgy">>[[|nostalgy]]
+<<AddOption "[____enteinen tunne] Erikoinen olo... Ei huono tietenkään, mutta erikoinen ""kangastus">>[[|kangastus]]
+
+:: nostalgy
+<<PassiveSkill "Nostalgia" "Easy" "Success">>
+<<AddParagraph "Tällaisina kauniina kesäpäivinä? Totta kai sellaiseen paikkaan mihin kaikki on aina ennenkin menneet. Missä vesi kimmaltaa kauniisti ja ihmisten ilakointi lämmittää sydäntä">>
+<<AddOption " [Selkeä suunta] Tiedän itseasiassa täydellisen paikan""osyksolution">>[[|osyksolution]]
+<<AddOption "[Ystävyyden voima] Kenties kysyn ystäviltä mihin he haluaisivat mennä""aasit">>[[|aasit]]
+<<AddOption "[____enteinen tunne] Erikoinen olo... Ei huono tietenkään, mutta erikoinen ""kangastus">>[[|kangastus]]
+
+:: kangastus
+<<PassiveSkill "\_\_\_\_enteinen tunne" "interesting" "success">>
+<<AddParagraph "Olosi on mitä erinomaisin totta kai. Miksi se ei olisi näin ihanana päivänä. Mutta on erikoinen olo. Muu kaupunki tuntuu väreilevän kuin kangastus. Et tiedä mitä siitä pitäisi ajatella. Se on mielenkiintoista vähintäänkin">>
+
+<<AddOption " [Selkeä suunta] Tiedän itseasiassa täydellisen paikan""osyksolution">>[[|osyksolution]]
+<<AddOption "[Nostalgia] Mietin vielä mihin itse menisin tällaisena päivänä""nostalgy">>[[|nostalgy]]
+<<AddOption "[Ystävyyden voima] Kenties kysyn ystäviltä mihin he haluaisivat mennä""aasit">>[[|aasit]]
+
+:: osyksolution
+<<AddParagraph "Tiedän täydellisen paikan joka tyydyttää kaikkien halut ihastuttavalle kesäpäivälle ja tuntuu että on oikea aika mennä sinne.">>
+<<AddParagraph "[[kiikeli]]">>
+<!-- salasanaboksi vastaus: kiikeli -->
+<<AddOption "Itseasiassa en tiedä sittenkään mihin mennä""osykbacktrack">>
+
+:: osykbacktrack
+<<AddOption "olin kenties vähän liian itsevarma, mutta onneksi voin vielä tarkkailla vaihtoehtoja. pahimmassa tapauksessa voiin aina kysyä tietäjältä">>
+
+<<AddOption "[Ystävyyden voima] Kenties kysyn ystäviltä mihin he haluaisivat mennä""aasit">>[[|aasit]]
+<<AddOption "[Nostalgia] Mihin itse tavallisesti menen tällaisina päivinä""nostalgy">>[[|nostalgy]]
+<<AddOption "[____enteinen tunne] Erikoinen olo... Ei huono tietenkään, mutta erikoinen ""kangastus">>[[kangastus]]
+
+<!-- ****************** KIIKELI ********************** -->
+:: Kiikeli {"position":"1100,50","size":"100,100"}
+<<AddParagraph "Saavun Kiikeliin minulla on erikoinen, mutta ei huono tunne. Olin oikeassa siitä että tämä olisi täydellinen paikka jatkaa näin ihastuttavaa päivää. Ystävänikin vaikuttavat tyytyväisiltä.">>
+<<SetSpeaker "Ystävät">>
+<<AddParagraph "Aasit ensin, seuraavana kasvot, kyse on tasapainosta. Aasit ensin seuraavana kasvot, aasit on tasapaino. Aasit ensin, seuraavana kasvot, aasit on tasapaino, seuraavana kasvot">>
+<<BlankSpeaker>>
+<<AddParagraph "Kyllä ehdottomasti allekirjoitan tämän kaiken. Paitsi mielestäni listasta puuttuu tiaiset kasvojen jälkeen. Heidän jatkuva hokemisensa aiheuttaa minulle... No ei tietenkään huonoa, mutta erikoisen tunteen päässäni joka yltyy.">>
+<<SetSpeaker "Ystävät">>
+<<AddParagraph "Seuraavana kasvot, seuraavana kasvot, seuraavana kasvot, seuraavana kasvot, seuraavana kasvot">>
+<<BlankSpeaker>>
+<<AddParagraph "Huomaan alkavani hokemaan sitä itsekin. Seuraavana kasvot, seuraavana kasvot, kasvot kasvot kasvot kasvot kasvot. Erikoinen tunne päässäni kasvaa.">>
+<<SetSpeaker "Ystävät">>
+<<AddParagraph "KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT KASVOT">>
+<<BlankSpeaker>>
+<<AddParagraph "Tunne ei ole erikoinen. Se on puhdasta valkohehkuista kipua. En ole tuntenut sitä niin pitkään. Viimeksi kun hän lähti. Kuka?">>
+<<PassiveSkill "Pahaenteinen tunne" "Luetko ees näitä" "Success">>
+<<AddParagraph "Kuva hänen kasvoistaan välähtää mielessäni, mutta se tuntuu kaukaiselta ja nopeaan hälvenevältä. Kun koitan pitää sitä mielessäni kipu päässäni yltyy ja huomaan pitkästä aikaa tutun tunteen vatsanpohjassani, joka lähtee kiipeämään ruokatorveani pitkin.">>
+<<AddParagraph "En saa unohtaa näitä kasvoja.">>
+<<AddParagraph "Katson nopeaan ympärilleni. En näe ystäviäni missään. Keinosaarella tuntuu olevan lisäkseni ainoastaa yksi henkilö.">>
+<<PassiveSkill "Nostalgia" "Easy" "Success">>
+<<SetSpeaker "Nostalgia">>
+<<AddParagraph "Hän on tuttu ja turvallinen">>
+<<BlankSpeaker>>
+<<AddParagraph "Lähestyn häntä kiireella. Mielessäni välähtelee lukuisia kasvoja enkä enää erota niistä mikä on oikea. Toivottavasti hän voi auttaa.">>
+<<AddParagraph "[[Pyydä apua mieheltä]]">>
+
+:: Pyydä apua mieheltä {"position":"1100,250","size":"100,100"}
+<<AddParagraph "Mikä on todellisuutta?">>
+<<textbox "$todellisuus" "" "tarkista_todellisuus">>
+
+:: tarkista_todellisuus
+<<if $todellisuus is "todellisuus">>
+<<ThoughtGained "Todellisuus +1">>
+<<ItemGained "Todellisuus Potion">>
+<<AddParagraph "Miehen antaman juoman jälkeen tunsin jälleen olevani maan pinnalla. Pitelin muotokuvaa käsissäni ja muistot morsiamestani palasivat yhdessä katoavan pääkivun kanssa. En nähnyt ystäviäni enää missään, mutta tiesin silti että he ovat aina mukanani.">>
+<<AddParagraph "Miten olinkaan ollut näin hukassa? Lex Luthor ja minä olemme aina olleet sama henkilö. Olen aina jollakin tasolla tiennyt sen. Ei ollut mitään järkeä kieltää sitä varsinkin, kun se on suuremmassa mittakaavassa täysin yhdentekevää. Olin melkein unohtaa sen millä on oikeasti väliä.">>
+<<AddParagraph "Morsiameni. Olemme menossa naimisiin. Enkä anna minkään enää seisoa sen tiellä.">>
+<<PassiveSkill "Pahaenteinen tunne" "Obvious" "Success">>
+<<SetSpeaker "Pahaenteinen tunne">>
+<<AddParagraph "Ehkä huono vointisi johtuu siitä, että olet unohtanut jotakin tärkeää häihin liittyen, jolla voi olla katastrofaalisia seurauksia">>
+<<BlankSpeaker>>
+<<AddParagraph "Tämä tuntuu järkeenkäyvältä hypoteesilta. Mutta päässäni vilisee vieläkin niin paljon eri vaihtoehtoja erilaisista todellisuuksista, että en tiedä mihin tarttua. Tarvitsen vain Selkeän Suunnan. Pintaan nousee asioita jotka tuntuvat merkitsevän jotakin.">>
+<<AddParagraph "[[Keskity muistoon]] unohtamisen haluttomuudesta tai [[mieti merkkihenkilöitä]]">>
+<<else>>
+<<AddParagraph "Se ei ole oikea sana. [[Yritä uudelleen->Pyydä apua mieheltä]]">>
+<</if>>
+
+:: Keskity muistoon {"position":"950,450","size":"100,100"}
+<<PassiveSkill "Nostalgia" "Medium" "Success">>
+<<AddParagraph "Istun auton takapenkillä. Kirjoitan jotain kuitin taakse ja ojennan sen vieressäni istuvalle. Hän on pahoinvoiva. Olemme lähdossa jostakin. Keskustelimme siellä tovin. Onko tämä tärkeää? Kenties jollekin.">>
+<<BlankSpeaker>>
+<<AddParagraph "[[Tiedän mihin mennä->kiikelisolution]] tai voin vielä [[miettiä merkkihenkilöitä->mieti merkkihenkilöitä]]">>
+
+:: mieti merkkihenkilöitä {"position":"1250,450","size":"100,100"}
+<<PassiveSkill "Todellisuus" "Medium" "Success">>
+<<AddParagraph "Näen välähdyksiä miehestä. Härnösand, pohjolaistoveripiiri, runoilija, muistettu mies. Häntä on muistettu jossain. Missä?">>
+<<BlankSpeaker>>
+<<AddParagraph "[[Tiedän mihin mennä->kiikelisolution]] tai voin vielä [[keskittyä muistoon->Keskity muistoon]]">>
+
+:: kiikelisolution {"position":"1100,650","size":"100,100"}
+<<PassiveSkill "Selkeä suunta" "Easy" "Success">>
+<<AddParagraph "Molemmat pintaan tulevat ajatukset viittaavat selkeästi samaan paikkaan. En ymmärrä miten se paikka voi mitenkään liittyä häihini tai mihinkään mitä on tapahtunut.">>
+<<AddParagraph "Minun on parempi alkaa saamaan vastauksia.">>
+<<BlankSpeaker>>
+<<AddParagraph "[[Franzen]]">>
+
+<!-- ****************** FRANZEN ********************** -->
+:: Franzen {"position":"1100,50","size":"100,100"}
+<<AddParagraph "Saavun puistoon. Patsaan alla tuolilla istuu itseensä tyytyväisen näköinen mies.">>
+<<PassiveSkill "Töissäkäyvä ihminen" "Easy" "Success">>
+<<SetSpeaker "Töissäkäyvä ihminen">>
+<<AddParagraph "Yyh. Älä mene lähemmäksi. Haistat sen tänne asti. Miehen strukturoimaton arki löyhkää kuin tuhat ahnasta kättä kopeloimassa Suomineidon rahakirstua. Katso noita huolettomia vastuusta vapaita hartijoita. Hän on ilmiselvästi työtön.">>
+<<BlankSpeaker>>
+<<AddParagraph "Työtön? Tarkemmin ajateltuna se on ilmiselvää. Mieshän istuu puistonpenkillä ja ne ovat työttömiä varten rakennettu. Ei Töissäkäyvällä ihmisellä ole aikaa puistoissa istumiseen.">>
+<<SetSpeaker "Pahaenteinen tunne">>
+<<AddParagraph "Mutta kaikki merkit johtivat tänne. Hän varmasti liittyy jotenkin siihen mitä emme muista. Miksi hän muuten olisi täällä? Kenties hän on jotakin vailla.">>
+<<SetSpeaker "Töissäkäyvä ihminen">>
+<<AddParagraph "Totta kai hän on. Hän on työtön. Aina he ovat jotain vailla. Huomiota jos ei muuta">>
+<<BlankSpeaker>>
+<<AddParagraph "Oli miten oli sinä olet tullut hakemaan vastauksia ja vastauksia sinä tulet saamaan. Jos lähestymistapani on täydellinen saan varmasti häneltä mitä haluan.">>
+<<AddParagraph "[[Lähesty iloisesti tervehtien]], [[istu varoen viereen]] tai [[lähesty äärimmäisellä varovaisuudella]]">>
+
+:: Lähesty iloisesti tervehtien {"position":"900,250","size":"100,100"}
+<<AddParagraph "Lähestyn miestä tervehtien iloisesti.">>
+<<AddParagraph "[[Odota reaktiota->franzenact]]">>
+
+:: istu varoen viereen {"position":"1100,250","size":"100,100"}
+<<AddParagraph "Lähestyn miestä varoen. Istun huomaamatta hänen viereensä ennen kuin aloitan keskustelun.">>
+<<AddParagraph "[[Odota reaktiota->franzenact]]">>
+
+:: lähesty äärimmäisellä varovaisuudella {"position":"1300,250","size":"100,100"}
+<<AddParagraph "Lähestyn miestä äärimmäisellä varovaisuudella. Lähestyn matalana, ettei hän säikähdä ja pidän jotain lahjusta korkealla suoralla kädellä kiinnittääkseni hänen huomionsa. Toistan selkeällä ja rauhallisella äänellä \"en halua sinulle pahaa\"">>
+<<AddParagraph "[[Odota reaktiota->franzenact]]">>
+
+:: franzenact {"position":"1100,450","size":"100,100"}
+<<AddParagraph "Jos lähestymistapani oli menestys hän varmasti ottaa minuun kontaktia, jossa kohtaa voin kenties tiedustella häneltä vastauksia.">>
+<<BlankSpeaker>>
+<<AddParagraph "Mitä mies sanoo?">>
+<<textbox "$franzenvastaus" "" "tarkista_franzen">>
+
+:: tarkista_franzen
+<<if $franzenvastaus is "">>
+<<AddParagraph "[[Ei mitään. Mies ei reagoi millään tavalla.->postfranzen]]">>
+<<else>>
+<<AddParagraph "[[Ei mitään. Mies ei reagoi millään tavalla.->postfranzen]]">>
+<</if>>
+
+:: postfranzen {"position":"1100,650","size":"100,100"}
+<<AddParagraph "Olen raivoissani. Täynnä punahehkuista raivoa jota mikään määrä huurteisia pakastearkun kansia ei pystyisi jäähdyttämään.">>
+<<AddParagraph "En voi uskoa, että tuhlasin aikaani näin. En voi uskoa, että kaiken tämän jälkeen joutuisin jonkun typerän lautasapina pellen jallitettavaksi.">>
+<<BlankSpeaker>>
+<<AddParagraph "Miksi kaikki jotka kohtaan ovat sekaisin?">>
+<<AddParagraph "Miksi tässä päivässä ei ole mitään järkeä?">>
+<<AddParagraph "Olen saanut tarpeekseni Vapaalla Olemisesta.">>
+<<SetSpeaker "Töissäkäyvä ihminen">>
+<<AddParagraph "No sittenhän tiedät jo mihin mennä.">>
+<<BlankSpeaker>>
+<<AddParagraph "[[Menen ainoaan paikkaan jossa on järkeä->seuraava_lokaatio]]">>
+
+:: seuraava_lokaatio {"position":"1100,850","size":"100,100"}
+<<AddParagraph "Jatkuu seuraavassa lokaatiossa...">>
+
+<!-- ****************** TAIDEMUSEO ********************** -->
+:: Taidemuseo {"position":"1100,50","size":"100,100"}
+<<AddParagraph "Kaikkien näiden etsivien ja tietäjien viinanhuuruisten selitysten ja päänsisäisen kieputusten jälkeen tuntuu helpottavalta olla taidemuseolla. Struktuuria, rutiineja, järjestystä! Mittailen paikkaa katseellani.">>
+<<PassiveSkill "Työssäkävijä" "Easy" "Success">>
+<<SetSpeaker "Työssäkävijä">>
+<<AddParagraph "Sinulla ei ole kulkulätkää mukanasi. Ei lätkää, ei leimaamista, ei palkkaa.">>
+<<PassiveSkill "Nostalgia" "Easy" "Success">>
+<<SetSpeaker "Nostalgia">>
+<<AddParagraph "Museon taideteokset ja niiden monimerkityksellisyys herättävät sinussa kaipuun taiteen maailmaan, mutta muistot ärsyttävistä museovieraista hätyyttävät sinua sieltä pois">>
+<<PassiveSkill "Pahaenteinen tunne" "Easy" "Success">>
+<<SetSpeaker "Pahaenteinen tunne">>
+<<AddParagraph "Et ole koskaan saanut selville kaikkia työpaikkaasi liittyviä salaisuuksia ja kahvipöydän villeimpiä huhuja. Tänne on voinut kätkeytyä jotain mätää.">>
+<<BlankSpeaker>>
+<<AddParagraph "Yhtäkkiä kuulen ähinää takapihalta. Kuulen harvemmin minkäänlaista ähinää taidemuseolla, joten lähden kiertämään rakennusta ympäri löytääkseni äänen lähteen. Museon takana tapaan jokseenkin tutun oloisen hahmon, joka seisoo rikkinäinen lasta kädessään. Mitä hän oikein tekee täällä?">>
+<<PassiveSkill "Työssäkävijä" "Medium" "Success">>
+<<SetSpeaker "Työssäkävijä">>
+<<AddParagraph "Tämä henkilö on joskus ollut samalla työpaikalla. Hän tutkii historiaa, tai ainakin jotain mennyttä. Muistelisin.">>
+<<PassiveSkill "Vapaa-aika" "Medium" "Success">>
+<<SetSpeaker "Vapaa-aika">>
+<<AddParagraph "Tämä mies vaikuttaa olevan töissä, ei vapaa-ajalla.">>
+<<PassiveSkill "Nostalgia" "Easy" "Success">>
+<<SetSpeaker "Nostalgia">>
+<<AddParagraph "Muistat tämän henkilön, hän on joskus kertonut seikkailullisista kaivauksistaan museon kahvipöydässä.">>
+<<BlankSpeaker>>
+<<AddParagraph "Lähestyn hahmoa, joka ähisee itekseen ja tuijottaa vuoroin maata, vuoroin kädessään olevaa lastaa, joka repsottaa keskeltä kuin murtunut olkavarsi.">>
+<<AddParagraph "[[Muistele olkavartta]] tai [[puhu arkeologille]]">>
+
+:: Muistele olkavartta {"position":"950,250","size":"100,100"}
+<<AddParagraph "Muistelen, että joku ystävistäni on joskus murtanut olkavartensa. Hänellä oli side käärittynä käsivartensa ympärille monta kuukautta.">>
+<<AddParagraph "[[Puhu arkeologille->puhu arkeologille]]">>
+
+:: puhu arkeologille {"position":"1100,350","size":"100,100"}
+<<AddParagraph "Hahmo katsahtaa minuun nolostuneen näköisenä.">>
+<<SetSpeaker "Arkeologi">>
+<<AddParagraph "Täällä pitäisi olla Suomen Muinaiskuninkaan hauta, tiedän että se on jossain Taidemuseon mailla.">>
+<<BlankSpeaker>>
+<<AddParagraph "Mies on haudanryöstäjistä ammattimaisin, siis arkeologi. Tiedän, mitä antaa hänelle, jotta hän saa kaivauksensa aloitettua.">>
+<<AddParagraph "Anna arkeologille:">>
+<<textbox "$työkalu" "" "tarkista_työkalu">>
+
+:: tarkista_työkalu
+<<if $työkalu is "Jesari">>
+<<ItemGained "Jesari">>
+<<AddParagraph "[[Aloita kaivaminen->kaivaminen]]">>
+<<else>>
+<<AddParagraph "Se ei ole oikea työkalu. [[Yritä uudelleen->puhu arkeologille]]">>
+<</if>>
+
+:: kaivaminen {"position":"1100,550","size":"100,100"}
+<<AddParagraph "Aluksi tunsin olevani kuin Indiana Jones - taitava, nopea, seksikäs. Innostukseni alkoi kuitenkin nopeasti hiipua, kun kaivoin maata yhä uudestaan löytämättä penninhyrrääkään. Lopulta, kun sitten löysimme esineitä, ne tuntuivat kummalliselta roskalta. Ehkä taidemuseolle tuleminen ei sittenkään ollut ratkaisu ongelmiini, sillä työnteko on itse asiassa melko vituttavaa.">>
+<<AddParagraph "[[Löydät luuppi-kynän->luuppi]]">>
+
+:: luuppi {"position":"850,750","size":"100,100"}
+<<ItemGained "Luuppi-kynä">>
+<<PassiveSkill "Työssäkävijä" "Easy" "Success">>
+<<SetSpeaker "Työssäkävijä">>
+<<AddParagraph "Olen joutunut käyttämään tällaista kynää erilaisiin työasioihin">>
+<<PassiveSkill "Nostalgia" "Easy" "Success">>
+<<SetSpeaker "Nostalgia">>
+<<AddParagraph "Luuppi on jo käytöstä poistunut nimi. Muistan ajan kun nimi oli käytössä">>
+<<BlankSpeaker>>
+<<AddParagraph "[[Jatka kaivamista->taidekuva]]">>
+
+:: taidekuva {"position":"1000,750","size":"100,100"}
+<<ItemGained "Rännigallerian taidekuva">>
+<<PassiveSkill "Työssäkävijä" "Easy" "Success">>
+<<SetSpeaker "Työssäkävijä">>
+<<AddParagraph "Tämä on taidetta. Taide on yleensä museon sisäpuolella">>
+<<PassiveSkill "Vapaa-aika" "Easy" "Success">>
+<<SetSpeaker "Vapaa-aika">>
+<<AddParagraph "Olen taiteillut itsekin. Taide ei ole pelkkää työtä.">>
+<<PassiveSkill "Nostalgia" "Easy" "Success">>
+<<SetSpeaker "Nostalgia">>
+<<AddParagraph "Näyttely on purettu Rännigalleriasta jonkun kanssa. Eve?">>
+<<BlankSpeaker>>
+<<AddParagraph "[[Jatka kaivamista->luu]]">>
+
+:: luu {"position":"1150,750","size":"100,100"}
+<<ItemGained "Luu">>
+<<PassiveSkill "Nostalgia" "Easy" "Success">>
+<<SetSpeaker "Nostalgia">>
+<<AddParagraph "Tämä muistuttaa kännissä murretuista luista. Mutta eihän tämä voi olla minun? Taas tämä tyhjänpäiväinen ajatus.">>
+<<PassiveSkill "Tasapaino" "Easy" "Success">>
+<<SetSpeaker "Tasapaino">>
+<<AddParagraph "Jos kaatuu, voi murtaa luitaan.">>
+<<BlankSpeaker>>
+<<AddParagraph "[[Jatka kaivamista->artefakti]]">>
+
+:: artefakti {"position":"1300,750","size":"100,100"}
+<<ItemGained "Artefakti (pullonavaaja)">>
+<<PassiveSkill "Nostalgia" "Easy" "Success">>
+<<SetSpeaker "Nostalgia">>
+<<AddParagraph "Tämä ei herätä mitään muistoja tai assosiaatioita. Kummallinen blankki keskellä merkitysten sillisalaattia.">>
+<<PassiveSkill "Vapaa-aika" "Easy" "Success">>
+<<SetSpeaker "Vapaa-aika">>
+<<AddParagraph "Tämä muistuttaa pullonavaajaa. Pullonavaajalla avataan joskus alkoholipitoisia juomia.">>
+<<BlankSpeaker>>
+<<AddParagraph "[[Kaivaminen päättyy->pohdintaa]]">>
+
+:: pohdintaa {"position":"1100,950","size":"100,100"}
+<<SetSpeaker "Arkeologi">>
+<<AddParagraph "Löydöt ovat jotain, mitä en ole osannut olettaa.">>
+<<BlankSpeaker>>
+<<AddParagraph "Miksi kaikki paitsi yksi hautalöytö tuntuvat herättävän minussa jonkinlaisia henkilökohtaisia mielleyhtymiä, vaikka tämänhän piti olla muinaisen kuninkaan hauta. Olenko minä se muinaiskuningas? Miten tulevaisuus virtaa menneisyydeksi ja mitä me voimme tehdä tämän edessä?">>
+<<AddParagraph "Arkeologi pyytää jatkamaan kaivamista. [[Kaiva syvemmälle->kanooppiruukku]]">>
+
+:: kanooppiruukku {"position":"1100,1150","size":"100,100"}
+<<AddParagraph "Kaivetaan yhä syvemmälle. Yhtäkkiä lasta osuu johonkin kovaan. Kaivan esineen ympäriltä innostuneesti, kunnes tajuan, mitä oikein olen löytänyt. Kyseesä on kanooppiruukku, aivan kuin muinaisilla egyptiläisillä. Luonnollisesti se täytyy avata, sillä siitä on pitkä aika, kun olen kironnut koko ihmiskunnan kadotukseen.">>
+<<ItemGained "Kanooppiruukku">>
+<<AddParagraph "Aiemmin löydetty artefakti rikkoo lumotun sinetin. Ruukun sisällä on jonkinlaista hyvältä tuoksuvaa nestettä. Kuinka houkuttelevaa! Arkeologi katsoo nestettä ja kehottaa antamaan mahdollisuuden muinaiskuninkaan henkivoimalle.">>
+<<AddParagraph "[[Juo ruukun sisältö->muinainen viisaus]]">>
+
+:: muinainen viisaus {"position":"1100,1350","size":"100,100"}
+<<AddParagraph "Juon ruukun sisällön ja tunnen lämpimän tunteen koko kehossani. Muinainen viisaus valtaa aivoni.">>
+<<ThoughtGained "Muinainen viisaus">>
+<<PassiveSkill "Nostalgia" "Hard" "Success">>
+<<SetSpeaker "Nostalgia">>
+<<AddParagraph "Muinainen viisaus saa sinut yhdistelemään löytöjä uudelleen. Rännigallerian kaakelit, museokeskuksen edustamat suomalaiset perinteet, palaneen luun hautuminen räiskyvässä tulessa, artefaktin vastakappaleen pitäminen yhdessä kädessä, toisessa jääkylmä olut. Ajatukset saavat sinut hikoilemaan.">>
+<<PassiveSkill "Vapaa-aika" "Medium" "Success">>
+<<SetSpeaker "Vapaa-aika">>
+<<AddParagraph "Muinaiskuninkaan henki siirtää ajatuksiasi pois työnteosta. Ajattelet nyt fantastisia menneisyyden kuvia ja suomalaista alkuvoimaa.">>
+<<PassiveSkill "Pahaenteinen tunne" "Easy" "Success">>
+<<SetSpeaker "Pahaenteinen tunne">>
+<<AddParagraph "Mieleesi tulee, että Suomessa on paikkoja, joissa on synnytty - ja kuoltu.">>
+<<BlankSpeaker>>
+<<AddParagraph "Ratkaisuja tulisi hakea saunasta, muinaisten meditaatiohuoneesta. Sauna on niin kaukana työnteosta kuin voi olla. [[Lähde saunalle->sauna]]">>
+
+:: sauna {"position":"1100,1550","size":"100,100"}
+<<AddParagraph "Kollega lopettaa työnteon ja lähtee inspiroituneena mukaan.">>
+<<AddParagraph "[[Päätös]]">>
+
+<!-- ****************** PÄÄTÖS ********************** -->
+:: Päätös {"position":"1100,50","size":"100,100"}
+<<AddParagraph "Kaikki oli johtanut tähän.">>
+<<AddParagraph "Oikeasti oikeasti oli jokin päätös. Paikka johon mennä, jossa varmasti on vastauksia. Tiesin varmasti tämän olevan oikea paikka. Koko kehoni tärisi. Ei muinaisen kuninkaan energian takia.">>
+<<AddParagraph "Ei tämä tärinä oli puhdasta odotusta ja adrenaliinia.">>
+<<AddParagraph "Pystyin melkein jo tuntemaan solmun aukeavan vatsanpohjastani kun tietäjä osoitti minulle oikean oven. Ovi oli jo valmiiksi avoinna.">>
+<<AddParagraph "[[Astu sisään->tyhjä tila]]">>
+
+:: tyhjä tila {"position":"1100,250","size":"100,100"}
+<<AddParagraph "Tila oli tyhjä, mutta näytti kuin sieltä olisi lähdetty kiireellä. Lattialla oli muutamia violetteja ja vihreitä sukkia. Tilassa oli myös epätavallisen suuri määrä enemmän tai vähemmän tyhjiä piirakkavuokia. Useampi kymmen ainakin.">>
+<<AddParagraph "Tätä paikkaa oli selkeästi käytetty pidemmän aikaa tukikohtana.">>
+<<PassiveSkill "Turhautuminen" "Easy" "Success">>
+<<AddParagraph "Turhautumiseni alkoi kasvamaan kunnes huomasin, että tilan pöydälle oli jätetty videokasetti tekstillä \"Katso minut valtteri moilanen\". Tilassa oli onneksi videonauhuri.">>
+<<ItemGained "Videokasetti - Valtteri Moilanen">>
+<<AddParagraph "[[Laita kasetti nauhuriin->videokasetti]]">>
+
+:: videokasetti {"position":"1100,450","size":"100,100"}
+<<SetSpeaker "Videokasetti">>
+<<AddParagraph "...">>
+<<BlankSpeaker>>
+<<AddParagraph "Kasetti alkaa pyöriä. Ruudulle ilmestyy kuva.">>
+<<AddParagraph "[[Katso videota->video alkaa]]">>
+
+:: video alkaa {"position":"1100,650","size":"100,100"}
+<<AddParagraph "Thank you for playing Bachelost">>
+
+<!-- ****************** 
+
+Ravintolan meteli nousi,
+Rottamainen Ville sousi,
+Monelle varattiin viesti:
+"Kätkin runon, etsi, etsi!"
+
+Leimaveron lantti lankesi,
+Normaalit nivelet katkesi.
+Remonttien villaa valaa,
+Katso!
+Rovaniemen tallit palaa
+
+Viennille armotta vietiin
+Lomani relevantti railakas
+Elontaival metrin mittaa,
+Liiton valtameren kittaa.
+
+Vennamolle tiirat sukelsi
+Mannavelli erotti puoleksi
+Raivoten metallin kiveksi
+Rottamainen Ville Etsi!
+
+		              - L.L.
+
+********************** -->
