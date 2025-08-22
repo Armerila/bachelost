@@ -525,6 +525,7 @@ Original story by The Worst men
 :: en tiedä mitä antaa {"position":"1025,450","size":"100,100"}
 <<PassiveSkill "Pahaenteinen tunne" "Easy" "Success">>
 <<AddParagraph "En tiedä, mitä täytyisi antaa. Jatkan Tietäjän horinan kuuntelua.">>
+<<BlankSpeaker>>
 <<AddParagraph "[[jatka kuuntelemaan->viimeinen yritys]]">>
 
 :: Ymmärrän vihjeen {"position":"1175,450","size":"100,100"}
@@ -543,7 +544,6 @@ Original story by The Worst men
 
 :: Olen varma {"position":"1100,850","size":"100,100"}
 <<PassiveSkill "Selkeä suunta" "Easy" "Success">>
-<<AddParagraph "Käyntikortti piilotettu Valtterin takin povitaskuun.">>
 <<AddParagraph "Mitä käyntikortissa lukee?">>
 <<textbox "$käyntikortti" "" "tarkista_povitasku">>
 
