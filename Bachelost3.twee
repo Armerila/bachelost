@@ -639,7 +639,7 @@ Original story by The Worst men
 <<PassiveSkill "Töissäkäyvä ihminen" "easy" "Success">>
 <<AddParagraph "Etsivä">>
 
-<<AddParagraph "Etsivä avautuu ongelmastaan ja hän antaa [[avaimen jatkoon]]"
+<<AddParagraph "Etsivä avautuu ongelmastaan ja hän antaa [[avaimen jatkoon]]">>
 
 :: backtrackhelmi
 <<AddParagraph "Jos olen täysin kujalla voin myös aina pyytää tietäjältä apua">>
